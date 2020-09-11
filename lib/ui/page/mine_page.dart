@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 /// 我的
 class MinePage extends StatefulWidget {
-  MinePage({Key key, this.title}) : super(key: key);
+  MinePage({Key key, this.title = "设置"}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect

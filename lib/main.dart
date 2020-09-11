@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:seekyouapp/ui/page/home_page.dart';
+import 'package:seekyouapp/ui/page/interest_page.dart';
+import 'package:seekyouapp/ui/page/mine_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,7 +29,69 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(title: 'Flutter Demo Home Page'),
+      home: BottomWidget(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+class BottomWidget extends StatefulWidget {
+  BottomWidget({Key key, this.title}) : super(key: key);
+
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
+  final String title;
+
+  @override
+  _BottomWidgetState createState() => _BottomWidgetState();
+}
+
+class _BottomWidgetState extends State<BottomWidget> {
+  List<StatefulWidget> pageList;
+  int curPageIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    pageList = [HomePage(), InterestPage(), MinePage()];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
+    return Scaffold(
+      appBar: AppBar(
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title),
+      ),
+      body: pageList[curPageIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("首页")),
+          BottomNavigationBarItem(icon: Icon(Icons.add), title: Text("关注")),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), title: Text("我的")),
+        ],
+        iconSize: 40,
+        currentIndex: curPageIndex,
+        onTap: (int index) {
+          setState(() {
+            curPageIndex = index;
+          });
+        },
+      ),
     );
   }
 }

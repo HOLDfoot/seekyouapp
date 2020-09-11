@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 /// 关注
 class InterestPage extends StatefulWidget {
-  InterestPage({Key key, this.title}) : super(key: key);
+  InterestPage({Key key, this.title = "关注"}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
