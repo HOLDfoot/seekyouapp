@@ -158,13 +158,24 @@ class HomePageState extends State<HomePage> {
   /// 获取item Widget
   Widget getChildWidget(int index) {
     return Card(
-      color: Colors.green,
-      child: Image.network(
+      child: CachedNetworkImage(
+        imageUrl: userList[index].photo,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Center(
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(),
+          ),
+        ),
+        errorWidget: (context, url, error) => Icon(Icons.error),
+      ),
+      /* child: Image.network(
         userList[index].photo,
         fit: BoxFit.cover,
         colorBlendMode: BlendMode.colorBurn,
         color: Colors.white10,
-      ),
+      ),*/
     );
   }
 
