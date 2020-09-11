@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/ball_pulse_header.dart';
@@ -14,32 +15,35 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  List<UserInfo> orderList;
+  List<UserInfo> userList;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: EasyRefresh(
-          emptyWidget: getEmptyWidget(),
-          firstRefresh: true,
-          header: BallPulseHeader(
-            enableHapticFeedback: false,
-          ),
-          footer: BallPulseFooter(
-            enableHapticFeedback: false,
-          ),
-          onRefresh: onRefresh,
-          onLoad: noMore ? null : onLoad,
-          child: ListView.builder(
-            padding: EdgeInsets.only(top: adapt(4)),
-            shrinkWrap: true,
-            itemCount: getChildCount(),
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
+        emptyWidget: getEmptyWidget(),
+        firstRefresh: true,
+        header: BallPulseHeader(
+          enableHapticFeedback: false,
+        ),
+        footer: BallPulseFooter(
+          enableHapticFeedback: false,
+        ),
+        onRefresh: onRefresh,
+        onLoad: noMore ? null : onLoad,
+        child: GridView.count(
+          crossAxisCount: 4,
+          childAspectRatio: 0.6,
+          crossAxisSpacing: 0,
+          mainAxisSpacing: 0,
+          children: List.generate(
+            getChildCount(),
+            (index) {
               return getChildWidget(index);
             },
-          )
-/*
+          ),
+        ),
+        /*
           child: ListView.builder(
             padding: EdgeInsets.only(top: adapt(4)),
             shrinkWrap: true,
@@ -79,7 +83,6 @@ class HomePageState extends State<HomePage> {
   /// 刷新页面
   /// 处理了: 网络异常, 第一页的分页, 还有更多的情况, 第一次加载展示加载的UI
   Future<void> onRefresh() async {
-    print("onRefresh 1");
     // 恢复初始值
     page = 1;
     List<UserInfo> orderData = await getData();
@@ -91,7 +94,7 @@ class HomePageState extends State<HomePage> {
       setState(() {
         // 如果不是网络异常, 则不为空, 更新列表, 如果是网络异常则为空, 不更新
         if (orderData != null) {
-          orderList = orderData;
+          userList = orderData;
           noMore = false;
         }
       });
@@ -101,8 +104,6 @@ class HomePageState extends State<HomePage> {
   /// 加载更多
   /// 处理了: 没有更多的情况, 网络失败的情况, 分页的情况
   Future<void> onLoad() async {
-    print("onLoad 1");
-
     page++;
     List<UserInfo> orderData = await getData();
     if (mounted) {
@@ -112,11 +113,11 @@ class HomePageState extends State<HomePage> {
           page--;
         } else if (orderData.length == 0) {
           noMore = true;
-          orderList.addAll(orderData);
+          userList.addAll(orderData);
           page--;
         } else {
           noMore = false;
-          orderList.addAll(orderData);
+          userList.addAll(orderData);
         }
       });
     }
@@ -136,7 +137,7 @@ class HomePageState extends State<HomePage> {
       return SearchResultEmptyWidget(
         title: "正在努力加载中",
       );
-    } else if (orderList == null) {
+    } else if (userList == null) {
       // 不是第一次加载情况下仍然为空, 则肯定是网络错误
       return SearchResultEmptyWidget(
         title: "网络错误",
@@ -150,7 +151,7 @@ class HomePageState extends State<HomePage> {
 
   /// 获取子item的数值
   int getChildCount() {
-    int count = (orderList ?? List()).length;
+    int count = (userList ?? List()).length;
     return count;
   }
 
@@ -158,8 +159,12 @@ class HomePageState extends State<HomePage> {
   Widget getChildWidget(int index) {
     return Card(
       color: Colors.green,
-      margin: EdgeInsets.all(10),
-      child: Text(orderList[index].name + " $index"),
+      child: Image.network(
+        userList[index].photo,
+        fit: BoxFit.cover,
+        colorBlendMode: BlendMode.colorBurn,
+        color: Colors.white10,
+      ),
     );
   }
 
@@ -175,13 +180,12 @@ class UserInfo {
   String introduce;
 
   UserInfo({this.name, this.email, this.photo, this.introduce});
-
 }
 
 class SearchResultEmptyWidget extends StatelessWidget {
   final String title;
 
-  SearchResultEmptyWidget({Key key, this.title = "没有数据"}) :super(key: key);
+  SearchResultEmptyWidget({Key key, this.title = "没有数据"}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -189,4 +193,6 @@ class SearchResultEmptyWidget extends StatelessWidget {
   }
 }
 
-const String CONST_PIC = "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=375015144,848773525&fm=26&gp=0.jpg";
+const String CONST_PLACEHOLDER = "http://via.placeholder.com/350x150";
+const String CONST_PIC =
+    "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=375015144,848773525&fm=26&gp=0.jpg";
