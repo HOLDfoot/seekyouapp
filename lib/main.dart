@@ -71,18 +71,13 @@ class _BottomWidgetState extends State<BottomWidget> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
       body: pageList[curPageIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("首页")),
           BottomNavigationBarItem(icon: Icon(Icons.add), title: Text("关注")),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), title: Text("我的")),
+              icon: Icon(Icons.person), title: Text("我的")),
         ],
         iconSize: 40,
         currentIndex: curPageIndex,

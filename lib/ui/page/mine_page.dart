@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:seekyouapp/ui/constant/DevConstant.dart';
 
 /// 我的
 class MinePage extends StatefulWidget {
@@ -21,17 +21,33 @@ class MinePage extends StatefulWidget {
 }
 
 class _MinePageState extends State<MinePage> {
-  int _counter = 0;
+  ScrollController _scrollController = ScrollController();
+  bool _showAppBarTitle = true;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+  @override
+  void initState() {
+    super.initState();
+    //监听滚动事件，打印滚动位置
+    int hideOffsets = 140;
+    _scrollController.addListener(() {
+      if (_scrollController.offset >= hideOffsets &&
+          _showAppBarTitle == false) {
+        setState(() {
+          _showAppBarTitle = true;
+        });
+      } else if (_scrollController.offset < hideOffsets &&
+          _showAppBarTitle == true) {
+        setState(() {
+          _showAppBarTitle = false;
+        });
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
   }
 
   @override
@@ -43,46 +59,127 @@ class _MinePageState extends State<MinePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+      body: NestedScrollView(
+          controller: _scrollController,
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [
+              SliverAppBar(
+                elevation: 0,
+                backgroundColor: Theme.of(context).cardColor,
+                expandedHeight: 236,
+                pinned: true,
+                floating: false,
+                snap: false,
+                flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  background: Stack(
+                    children: [
+                      ConstrainedBox(
+                        constraints: BoxConstraints.expand(),
+                        child: Image.asset(
+                          "assets/images/ic_mine_header_bg.png",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Container(
+                          margin: EdgeInsets.only(top: 50 + 56.0, left: 50),
+                          child: Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(right: 20),
+                                child: ClipOval(
+                                  child: FadeInImage.assetNetwork(
+                                    placeholder: DevConstant.CONST_PLACEHOLDER,
+                                    fit: BoxFit.cover,
+                                    image: userPhoto,
+                                    width: 80,
+                                    height: 80,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                height: 80,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 20),
+                                    ),
+                                    Text(
+                                      "新世界",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 10),
+                                    ),
+                                    Text("富强民主文明和谐"),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                leading: Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                ),
+                title: InkWell(
+                  child: Text(
+                    _showAppBarTitle ? "新世界" : "",
+                    style: TextStyle(fontSize: 18, color: Colors.black),
+                  ),
+                  onTap: () {},
+                ),
+                centerTitle: true,
+                actions: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Icon(Icons.settings),
+                    ],
+                  ),
+                ],
+              )
+            ];
+          },
+          body: Container(
+            child: Column(
+              children: [
+                getLineWidget(title: "设置", icon: Icons.settings),
+                getLineWidget(title: "关注我的人", icon: Icons.person_add),
+                getLineWidget(title: "喜欢的文章", icon: Icons.wallpaper),
+              ],
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+          )),
     );
   }
+
+  Widget getLineWidget({String title, IconData icon}) {
+    return Container(
+        height: 50,
+        color: Color(0xFFF3F5F9),
+        margin: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(title),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Icon(icon),
+            )
+          ],
+        ));
+  }
+
+  String userPhoto =
+      "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1993946481,547847354&fm=26&gp=0.jpg";
 }
