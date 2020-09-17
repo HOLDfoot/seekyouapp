@@ -22,7 +22,7 @@ class MinePage extends StatefulWidget {
 
 class _MinePageState extends State<MinePage> {
   ScrollController _scrollController = ScrollController();
-  bool _showAppBarTitle = true;
+  bool _showAppBarTitle = false;
 
   @override
   void initState() {
