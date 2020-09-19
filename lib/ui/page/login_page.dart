@@ -1,61 +1,299 @@
+import 'dart:io';
+
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:seekyouapp/ui/constant/DevConstant.dart';
+import 'package:seekyouapp/util/toast_util.dart';
+import 'package:seekyouapp/util_set.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 
-/// 登录
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title = "登录"}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
+  bool iSignUp = false;
+
+  String email;
+  String pass1;
+  String pass2;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SingleChildScrollView(
         child: Container(
           alignment: Alignment.center,
-          width: 260,
-          height: 300,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 50,
-                      color: Colors.red,
+          child: Container(
+            width: 280,
+            child: Column(
+              children: [
+                Container(
+                  height: 100,
+                ),
+                Container(
+                  width: 280,
+                  child: Center(
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              iSignUp = false;
+                            });
+                          },
+                          child: Container(
+                            width: 140,
+                            height: 50,
+                            alignment: Alignment.center,
+                            child: Text(
+                              "登录",
+                              style: TextStyle(
+                                decoration: iSignUp
+                                    ? TextDecoration.none
+                                    : TextDecoration.underline,
+                                fontSize: iSignUp ? 20 : 30,
+                                color: Colors.yellow,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              iSignUp = true;
+                            });
+                          },
+                          child: Container(
+                            width: 140,
+                            height: 50,
+                            alignment: Alignment.center,
+                            child: Text(
+                              "注册",
+                              style: TextStyle(
+                                  decoration: iSignUp
+                                      ? TextDecoration.underline
+                                      : TextDecoration.none,
+                                  fontSize: iSignUp ? 30 : 20,
+                                  color: Colors.yellow),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      height: 50,
-                      color: Colors.green,
-                    ),
+                ),
+                Container(
+                  height: adapt(50),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      /*Image.asset(
+                        'assets/images/ic_smartphone.png',
+                        width: adapt(32),
+                        height: adapt(32),
+                        fit: BoxFit.contain,
+                      ),*/
+                      Container(
+                        width: 32,
+                        height: 32,
+                        child: Icon(
+                          Icons.email,
+                          size: 22,
+                        ),
+                      ),
+                      Padding(padding: EdgeInsets.only(right: adapt(6))),
+                      Expanded(
+                        child: TextField(
+                          autofocus: Platform.isAndroid,
+                          keyboardType: TextInputType.emailAddress,
+                          onChanged: (text) {
+                            email = text;
+                          },
+                          style: TextStyle(
+                              color: Color(0xff353535),
+                              fontSize: sp(16),
+                              textBaseline: TextBaseline.alphabetic),
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "请输入邮箱",
+                              hintStyle: TextStyle(
+                                  fontSize: sp(16), color: Color(0xff999999))),
+                        ),
+                      )
+                    ],
                   ),
-                ],
-              ),
-              Row(
-                children: [
-
-                ],
-              )
-            ],
+                ),
+                Container(
+                    margin: EdgeInsets.only(bottom: adapt(10)),
+                    height: adapt(1),
+                    decoration: BoxDecoration(color: Color(0xffdfdfdf))),
+                Stack(
+                  alignment: Alignment.bottomRight,
+                  children: <Widget>[
+                    Container(
+                      height: adapt(50),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            'assets/images/ic_padlock.png',
+                            width: adapt(32),
+                            height: adapt(32),
+                            fit: BoxFit.contain,
+                          ),
+                          Padding(padding: EdgeInsets.only(right: adapt(10))),
+                          Expanded(
+                            child: TextField(
+                              obscureText: true,
+                              onChanged: (text) {
+                                pass1 = text;
+                              },
+                              style: TextStyle(
+                                  color: Color(0xff353535),
+                                  fontSize: sp(16),
+                                  textBaseline: TextBaseline.alphabetic),
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "请输入密码",
+                                  hintStyle: TextStyle(
+                                      fontSize: sp(16),
+                                      color: Color(0xff999999))),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                getPasswordAgain(),
+                Container(
+                  margin: EdgeInsets.only(top: 50),
+                ),
+                loginBtn()
+              ],
+            ),
           ),
         ),
-      )
+      ),
     );
+  }
+
+  Widget getPasswordAgain() {
+    if (!iSignUp) {
+      return Container();
+    }
+    return Column(children: [
+      Container(
+          margin: EdgeInsets.only(bottom: adapt(10)),
+          height: adapt(1),
+          decoration: BoxDecoration(color: Color(0xffdfdfdf))),
+      Stack(
+        alignment: Alignment.bottomRight,
+        children: <Widget>[
+          Container(
+            height: adapt(50),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'assets/images/ic_padlock.png',
+                  width: adapt(32),
+                  height: adapt(32),
+                  fit: BoxFit.contain,
+                ),
+                Padding(padding: EdgeInsets.only(right: adapt(10))),
+                Expanded(
+                  child: TextField(
+                    obscureText: true,
+                    onChanged: (text) {
+                      pass2 = text;
+                    },
+                    style: TextStyle(
+                        color: Color(0xff353535),
+                        fontSize: sp(16),
+                        textBaseline: TextBaseline.alphabetic),
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "请再输入密码",
+                        hintStyle: TextStyle(
+                            fontSize: sp(16), color: Color(0xff999999))),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      )
+    ]);
+  }
+
+  Widget loginBtn() {
+    Color bgColor;
+    Color textColor;
+    bgColor = Color(0xFFFFD511);
+    textColor = Color(0xFF353535);
+
+    return Container(
+      width: 150,
+      height: 50,
+      child: FlatButton(
+        child: Text(
+          "登录/注册",
+          style: TextStyle(color: textColor, fontSize: sp(16)),
+        ),
+        disabledColor: bgColor,
+        color: bgColor,
+        onPressed: () {
+          print("_verifyInput 111");
+
+          if (_verifyInput()) {
+           _doLogin();
+         }
+        },
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(adapt(24))),
+      ),
+    );
+  }
+
+
+  bool _verifyInput() {
+    print("_verifyInput");
+    if (TextUtil.isEmpty(email)) {
+      Fluttertoast.showToast(msg: "请输入邮箱");
+      return false;
+    }
+    if (TextUtil.isEmpty(pass1)) {
+      Fluttertoast.showToast(msg: "请输入密码");
+      return false;
+    }
+    if (iSignUp && TextUtil.isEmpty(pass2)) {
+      Fluttertoast.showToast(msg: "请再次输入邮箱");
+      return false;
+    }
+
+    if (iSignUp && pass2 != pass1) {
+      Fluttertoast.showToast(msg: "两次密码不一致");
+      return false;
+    }
+    if (!email.contains("@")) {
+      Fluttertoast.showToast(msg: "请输入合法邮箱");
+      return false;
+    }
+    if (pass1.length < 6) {
+      Fluttertoast.showToast(msg: "密码长度不小于6位");
+      return false;
+    }
+
+    return true;
+  }
+
+  /// 将账号密码发送到服务器验证, 返回后进入下一个界面
+  void _doLogin() {
+
   }
 }
