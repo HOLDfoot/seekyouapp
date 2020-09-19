@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:seekyouapp/ui/page/home_page.dart';
 import 'package:seekyouapp/ui/page/interest_page.dart';
+import 'package:seekyouapp/ui/page/login_page.dart';
 import 'package:seekyouapp/ui/page/mine_page.dart';
 
 void main() {
@@ -64,12 +65,9 @@ class _BottomWidgetState extends State<BottomWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
+    bool isLogin = false;
+
     return Scaffold(
       body: pageList[curPageIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -82,9 +80,16 @@ class _BottomWidgetState extends State<BottomWidget> {
         iconSize: 40,
         currentIndex: curPageIndex,
         onTap: (int index) {
-          setState(() {
-            curPageIndex = index;
-          });
+          if (isLogin) {
+            setState(() {
+              curPageIndex = index;
+            });
+          } else if (index != 0){
+            /// 跳转到login界面
+            Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+              return LoginPage();
+            }));
+          }
         },
       ),
     );
