@@ -36,7 +36,8 @@ class AppNetService extends NetService {
 
   @override
   getBasicUrl() {
-    return "http://api.k780.com:88";
+    //return "http://api.k780.com:88";
+    return "http://192.168.0.104:8081";
   }
 
   @override

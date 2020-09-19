@@ -4,7 +4,7 @@ import 'package:seekyouapp/util/toast_util.dart';
 class ResultData {
   Map<String, dynamic> response; // 所有返回值
   dynamic data; // 请求回来的data, 可能是list也可能是map
-  String code; // 服务器的状态码
+  int code; // 服务器的状态码
   String msg; // 服务器给的提示信息
   /// true 请求成功 false 请求失败
   bool result = true; // 客户端是否请求成功false: HTTP错误
@@ -13,13 +13,13 @@ class ResultData {
   ResultData(this.msg, this.result, {this.url = ""});
 
   ResultData.response(this.response, {this.url = ""}) {
-    this.code = this.response["success"];
+    this.code = this.response["code"];
     this.msg = this.response["msg"];
     this.data = this.response["data"];
   }
 
   bool isFail() {
-    bool success = result && code == "1";
+    bool success = result && code == 0;
     if (!success) {
       mDebugPrint("Not success for $url:$result,code:$code,msg:$msg");
     }
@@ -27,7 +27,7 @@ class ResultData {
   }
 
   bool isSuccess() {
-    bool success = result && code == "1";
+    bool success = result && code == 0;
     if (!success) {
       mDebugPrint("Not success for $url:$result,code:$code,msg:$msg");
     }

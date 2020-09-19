@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:seekyouapp/data/manager/user.dart';
+import 'package:seekyouapp/data/manager/user_manager.dart';
+import 'package:seekyouapp/net/api/app_api.dart';
+import 'package:seekyouapp/net/api/bean/weather_bean.dart';
 import 'package:seekyouapp/util/toast_util.dart';
 import 'package:seekyouapp/util_set.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -251,15 +255,14 @@ class LoginPageState extends State<LoginPage> {
           print("_verifyInput 111");
 
           if (_verifyInput()) {
-           _doLogin();
-         }
+            _doLogin();
+          }
         },
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(adapt(24))),
       ),
     );
   }
-
 
   bool _verifyInput() {
     print("_verifyInput");
@@ -293,7 +296,36 @@ class LoginPageState extends State<LoginPage> {
   }
 
   /// 将账号密码发送到服务器验证, 返回后进入下一个界面
-  void _doLogin() {
+  void _doLogin() async {
+    Map<String, dynamic> param = {};
+    param["email"] = email;
+    param["password"] = pass1;
+    ResultData resultData;
+    if (iSignUp) {
+      resultData =
+      await AppApi.getInstance().signUp(context, true, param);
+    } else {
+      resultData =
+      await AppApi.getInstance().signIn(context, true, param);
+    }
+    if (resultData.isSuccess()) {
+      // 缓存用户信息, 然后结束本页面
+      User user = User.fromJson(resultData.data);
+      AccountManager.getInstance().logIn(user);
+      Navigator.of(context).pop();
+    } else {
+      resultData.toast();
+    }
+  }
 
+  _printWeather() async {
+    ResultData resultData =
+        await AppApi.getInstance().getWeather(context, true);
+    if (resultData.isSuccess()) {
+      WeatherBean weatherBean = WeatherBean.fromJson(resultData.response);
+      Fluttertoast.showToast(msg: "成功获取本周天气, 显示周一天气");
+      String weather = json.encode(weatherBean.result[1]);
+      print("weather: $weather");
+    }
   }
 }
