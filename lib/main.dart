@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:seekyouapp/data/manager/InitManager.dart';
+import 'package:seekyouapp/data/manager/user_manager.dart';
 import 'package:seekyouapp/ui/page/home_page.dart';
 import 'package:seekyouapp/ui/page/interest_page.dart';
 import 'package:seekyouapp/ui/page/login_page.dart';
@@ -10,9 +12,16 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+
+  MyApp(): super() {
+    InitManager.getInstance().init();
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    InitManager.getInstance().initContext(context);
+
     return OKToast(
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -83,7 +92,7 @@ class _BottomWidgetState extends State<BottomWidget> {
         iconSize: 40,
         currentIndex: curPageIndex,
         onTap: (int index) {
-          if (isLogin) {
+          if (AccountManager.getInstance().isLogin()) {
             setState(() {
               curPageIndex = index;
             });

@@ -1,8 +1,12 @@
 library basicnetservice;
 export 'package:seekyouapp/net/service/net_service.dart';
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:seekyouapp/data/manager/user.dart';
 import 'package:seekyouapp/net/service/net_service.dart';
+import 'package:seekyouapp/net/widget/dialog_param.dart';
+import 'package:seekyouapp/net/widget/loading_dialog.dart';
 
 import 'app_net_service.dart';
 
@@ -14,6 +18,7 @@ class AppApi extends AppNetService {
   static const String _SIGN_UP = "/signup";
   static const String _SIGN_IN = "/signin";
   static const String _GET_USER_INFO = "/api/get_user_info";
+  static const String _UPLOAD_USER_ICON = "/api/upload_user_icon";
 
   AppApi._();
   static AppApi _instance;
@@ -61,4 +66,19 @@ class AppApi extends AppNetService {
     return resultData;
   }
 
+
+  /// 上传头像接口
+  Future<ResultData> uploadUserIcon(BuildContext context, File file) async {
+    // 开始进度
+   ShowParam showParam = new ShowParam(barrierDismissible: true, showBackground: true);
+   showParam.text = "正在上传头像...";
+   LoadingDialogUtil.showTextLoadingDialog(context, showParam);
+    String fileName = "imageFile";
+    List<int> bytes = await file.readAsBytes();
+    ResultData resultData = await upLoad(bytes, fileName, _UPLOAD_USER_ICON);
+    showParam.pop();
+    // 结束进度
+    resultData.toast();
+    return resultData;
+  }
 }

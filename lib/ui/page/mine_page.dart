@@ -1,5 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:seekyouapp/net/api/app_api.dart';
+import 'package:seekyouapp/net/service/result_data.dart';
+import 'package:seekyouapp/net/widget/dialog_param.dart';
+import 'package:seekyouapp/net/widget/loading_dialog.dart';
 import 'package:seekyouapp/ui/constant/DevConstant.dart';
+import 'package:seekyouapp/util/logger.dart';
+import 'package:seekyouapp/util/path_util.dart';
+import 'package:seekyouapp/util_set.dart';
 
 /// 我的
 class MinePage extends StatefulWidget {
@@ -24,8 +35,11 @@ class _MinePageState extends State<MinePage> {
   ScrollController _scrollController = ScrollController();
   bool _showAppBarTitle = false;
 
+  Logger logger;
+
   @override
   void initState() {
+    logger = new Logger(runtimeType.toString());
     super.initState();
     //监听滚动事件，打印滚动位置
     int hideOffsets = 140;
@@ -89,13 +103,18 @@ class _MinePageState extends State<MinePage> {
                             children: [
                               Container(
                                 margin: EdgeInsets.only(right: 20),
-                                child: ClipOval(
-                                  child: FadeInImage.assetNetwork(
-                                    placeholder: DevConstant.CONST_PLACEHOLDER,
-                                    fit: BoxFit.cover,
-                                    image: userPhoto,
-                                    width: 80,
-                                    height: 80,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _choosePhoto(context);
+                                  },
+                                  child: ClipOval(
+                                    child: FadeInImage.assetNetwork(
+                                      placeholder: DevConstant.CONST_PLACEHOLDER,
+                                      fit: BoxFit.cover,
+                                      image: userPhoto,
+                                      width: 80,
+                                      height: 80,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -154,7 +173,7 @@ class _MinePageState extends State<MinePage> {
               children: [
                 getLineWidget(title: "设置", icon: Icons.settings),
                 getLineWidget(title: "关注我的人", icon: Icons.person_add),
-                getLineWidget(title: "喜欢的文章", icon: Icons.wallpaper),
+                getLineWidget(title: "喜欢的文章", icon: Icons.art_track),
               ],
             ),
           )),
@@ -178,6 +197,49 @@ class _MinePageState extends State<MinePage> {
             )
           ],
         ));
+  }
+
+  _choosePhoto(BuildContext context) async {
+    final _picker = ImagePicker();
+    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+    final File file = File(pickedFile.path);
+    _compressImage(file);
+  }
+
+  _compressImage(File imageFile) async {
+    ShowParam showParam =
+    new ShowParam(barrierDismissible: false, showBackground: true);
+    showParam.text = "正在上传头像...";
+    LoadingDialogUtil.showTextLoadingDialog(context, showParam);
+    logger.d("imageFile path= " + imageFile?.path);
+    int length = await imageFile.length();
+    logger.d("imageFile length= " + length.toString());
+    /*var result = await FlutterImageCompress.compressAndGetFile(
+      imageFile.absolute.path,
+      imageFile.path,
+      quality: 80,
+    );*/
+    int times = 0;
+    while (length >= 1 * 1024 * 1024) {
+      // 文件大小大于1M
+      List<int> byteList = await FlutterImageCompress.compressWithFile(
+          imageFile.path,
+          quality: 95 - times * 10); //  quality: 95 默认
+      String appPath = await DirectoryUtil.getDocumentsDirectory();
+      File result = File(appPath + "/photo.png");
+      await result.writeAsBytes(byteList);
+      imageFile = result;
+      length = await result.length();
+      logger.d("imageFile length= " +
+          length.toString() +
+          " times= " +
+          times.toString());
+      times++;
+    }
+    logger.d("上传头像 imageFile = " + imageFile.toString());
+    ResultData resultData =
+    await AppApi.getInstance().uploadUserIcon(context, imageFile);
+    showParam.pop();
   }
 
   String userPhoto =
