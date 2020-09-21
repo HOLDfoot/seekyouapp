@@ -2,6 +2,7 @@ library msnetservice;
 
 export 'result_data.dart';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:seekyouapp/net/api/net_config.dart';
@@ -45,7 +46,7 @@ class NetService {
 
   /// 附件上传
   upLoad(
-    List<int> file,
+    File file,
     String fileName,
     String url, {
     Map<String, dynamic> params,
@@ -63,7 +64,7 @@ class NetService {
   request(String url,
       {Method method,
       Map<String, dynamic> params,
-      var file,
+      File file,
       String fileName,
       String fileSavePath,
       BuildContext context,
@@ -104,8 +105,12 @@ class NetService {
             if (params == null) {
               params = {};
             }
-            /// 第一个fileName是参数名, 必须和接口一致, 第二个fileName是文件的文件名
-            params[fileName]  = MultipartFile.fromBytes(file, filename: fileName);
+            /// photo是参数名, 必须和接口一致, fileName是文件的文件名
+            //params["file"]  = MultipartFile.fromBytes(file, filename: fileName);
+            // 构造FormData
+            formData = FormData.fromMap({
+              "file": await MultipartFile.fromFile(file.path, filename: fileName),
+            });
             formData = FormData.fromMap(params);
             // formData.add(
             //     fileName, UploadFileInfo.fromBytes(file, fileName)); /// 第一个fileName是参数名, 必须和接口一致, 第二个fileName是文件的文件名
