@@ -17,7 +17,7 @@ class AppApi extends AppNetService {
   static const String _SIGN_UP = "/signup";
   static const String _SIGN_IN = "/signin";
   static const String _GET_USER_INFO = "/user/get_user_info";
-  static const String _UPLOAD_USER_ICON = "/save_photo";
+  static const String _UPLOAD_USER_ICON = "/upload_photo";
 
   AppApi._();
 

@@ -107,6 +107,7 @@ class NetService {
             params["files"]  = MultipartFile.fromFile(file.path, filename: fileName);
             // 构造FormData
             formData = FormData.fromMap(params);
+            print("upload FormData");
             response = await dioInstance.post(url, data: formData);
             break;
           }
