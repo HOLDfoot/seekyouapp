@@ -92,6 +92,7 @@ class NetService {
       requestParamLog.write(json.encode(params));
       printLog(requestParamLog.toString());
 
+
       switch (method) {
         case Method.GET:
           response = await dioInstance.get(url, queryParameters: params);
@@ -101,19 +102,11 @@ class NetService {
           break;
         case Method.UPLOAD:
           {
-            FormData formData = new FormData();
-            if (params == null) {
-              params = {};
-            }
-            /// photo是参数名, 必须和接口一致, fileName是文件的文件名
-            //params["file"]  = MultipartFile.fromBytes(file, filename: fileName);
+            FormData formData;
+            /// files是参数名, 必须和接口一致, fileName是文件的文件名
+            params["files"]  = MultipartFile.fromFile(file.path, filename: fileName);
             // 构造FormData
-            formData = FormData.fromMap({
-              "file": await MultipartFile.fromFile(file.path, filename: fileName),
-            });
             formData = FormData.fromMap(params);
-            // formData.add(
-            //     fileName, UploadFileInfo.fromBytes(file, fileName)); /// 第一个fileName是参数名, 必须和接口一致, 第二个fileName是文件的文件名
             response = await dioInstance.post(url, data: formData);
             break;
           }

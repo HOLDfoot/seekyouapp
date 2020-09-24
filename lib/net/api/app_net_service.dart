@@ -4,6 +4,7 @@ export 'package:seekyouapp/net/service/net_service.dart';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
+import 'package:seekyouapp/data/manager/user_manager.dart';
 import 'package:seekyouapp/net/service/net_service.dart';
 import 'package:seekyouapp/net/widget/dialog_param.dart';
 import 'package:seekyouapp/net/widget/loading_dialog.dart';
@@ -20,6 +21,7 @@ class AppNetService extends NetService {
     if (params != null) {
       basicParam.addAll(params);
     }
+    basicParam.addAll(AccountManager.getInstance().getUserParam());
     ShowParam showParam = new ShowParam(show: showLoad, barrierDismissible: false, showBackground: false);
     LoadingDialogUtil.showLoadingDialog(context, showParam);
     ResultData resultData = await super.request(url,method: method, params: basicParam, file: file, fileName: fileName,fileSavePath: fileSavePath);
