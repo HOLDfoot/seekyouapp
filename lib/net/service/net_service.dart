@@ -98,17 +98,23 @@ class NetService {
           response = await dioInstance.get(url, queryParameters: params);
           break;
         case Method.POST:
-          response = await dioInstance.post(url, data: params);
+          response = await dioInstance.post(url, data: params, options: Options(contentType: "application/x-www-form-urlencoded"));
           break;
         case Method.UPLOAD:
           {
             FormData formData;
+            params = {};
             /// files是参数名, 必须和接口一致, fileName是文件的文件名
-            params["files"]  = MultipartFile.fromFile(file.path, filename: fileName);
+            params["files"]  = await MultipartFile.fromFile(file.path, filename: fileName);
+            params["userId"] = "1";
             // 构造FormData
             formData = FormData.fromMap(params);
-            print("upload FormData");
+            //url = "/test_post";
+            print("5 upload FormData url: $url");
+            //params = {"userId" : 1};
             response = await dioInstance.post(url, data: formData);
+
+            //response = await dioInstance.post(url, data: formData);
             break;
           }
         case Method.DOWNLOAD:

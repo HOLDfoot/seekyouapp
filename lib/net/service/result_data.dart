@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:seekyouapp/net/api/net_config.dart';
 import 'package:seekyouapp/util/toast_util.dart';
 class ResultData {
+  static const int successCode = 0;
   Map<String, dynamic> response; // 所有返回值
   dynamic data; // 请求回来的data, 可能是list也可能是map
   int code; // 服务器的状态码
@@ -19,7 +20,7 @@ class ResultData {
   }
 
   bool isFail() {
-    bool success = result && code == 0;
+    bool success = result && code == successCode;
     if (!success) {
       mDebugPrint("Not success for $url:$result,code:$code,msg:$msg");
     }
@@ -27,7 +28,7 @@ class ResultData {
   }
 
   bool isSuccess() {
-    bool success = result && code == 0;
+    bool success = result && code == successCode;
     if (!success) {
       mDebugPrint("Not success for $url:$result,code:$code,msg:$msg");
     }
