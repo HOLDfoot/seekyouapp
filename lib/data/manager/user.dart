@@ -4,8 +4,14 @@ class User {
   int id;
   String name;
   String password;
+
   String userId;
   String userToken;
+
+  String userAge; // age
+  String userName; // name
+  String userGender;
+  String userDesc;
 
   User(
       {this.age,

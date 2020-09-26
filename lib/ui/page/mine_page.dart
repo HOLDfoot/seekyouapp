@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:seekyouapp/app/routers/navigate.dart';
+import 'package:seekyouapp/app/routers/routers.dart';
 import 'package:seekyouapp/net/api/app_api.dart';
 import 'package:seekyouapp/net/service/result_data.dart';
 import 'package:seekyouapp/net/widget/dialog_param.dart';
@@ -171,7 +173,9 @@ class _MinePageState extends State<MinePage> {
           body: Container(
             child: Column(
               children: [
-                getLineWidget(title: "设置", icon: Icons.settings),
+                getLineWidget(title: "设置", icon: Icons.settings, callback: () {
+                  AppController.navigateTo(context, AppRoutes.ROUTE_APP_SETTING);
+                }),
                 getLineWidget(title: "关注我的人", icon: Icons.person_add),
                 getLineWidget(title: "喜欢的文章", icon: Icons.art_track),
               ],
@@ -180,23 +184,30 @@ class _MinePageState extends State<MinePage> {
     );
   }
 
-  Widget getLineWidget({String title, IconData icon}) {
-    return Container(
-        height: 50,
-        color: Color(0xFFF3F5F9),
-        margin: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(title),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Icon(icon),
-            )
-          ],
-        ));
+  Widget getLineWidget({String title, IconData icon, Function callback}) {
+    return GestureDetector(
+      onTap: () {
+        if (callback != null) {
+          callback();
+        }
+      },
+      child: Container(
+          height: 50,
+          color: Color(0xFFF3F5F9),
+          margin: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(title),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Icon(icon),
+              )
+            ],
+          )),
+    );
   }
 
   _choosePhoto(BuildContext context) async {

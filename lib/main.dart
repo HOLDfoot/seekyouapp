@@ -1,5 +1,8 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:seekyouapp/app/routers/navigate.dart';
+import 'package:seekyouapp/app/routers/routers.dart';
 import 'package:seekyouapp/data/manager/InitManager.dart';
 import 'package:seekyouapp/data/manager/user_manager.dart';
 import 'package:seekyouapp/ui/page/home_page.dart';
@@ -15,6 +18,9 @@ class MyApp extends StatelessWidget {
 
   MyApp(): super() {
     InitManager.getInstance().init();
+    final router = new Router();
+    AppRoutes.configureRoutes(router);
+    AppController.router = router;
   }
 
   // This widget is the root of your application.

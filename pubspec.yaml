@@ -38,6 +38,8 @@ dependencies:
   image_picker: ^0.6.7+9
   flutter_image_compress: ^0.6.3
   path_provider: ^1.1.0
+  fluro: ^1.4.0
+  flutter_screenutil: ^0.5.2
 
 
 dev_dependencies:
