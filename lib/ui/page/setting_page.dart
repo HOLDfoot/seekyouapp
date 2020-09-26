@@ -174,7 +174,7 @@ class _SettingPageState extends BaseState<SettingPage> {
               FlatButton(
                   onPressed: () {
                     AccountManager.getInstance().logOut();
-
+                    AppController.navigateTo(context, AppRoutes.ROUTE_MAIN, clearStack: true);
                   },
                   child: Text('确定')),
               FlatButton(
