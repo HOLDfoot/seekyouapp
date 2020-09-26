@@ -53,7 +53,6 @@ class _SettingPageState extends BaseState<SettingPage> {
           color: Color(0xFFFFD511),
           onPressed: () {
             /// 跳转到测试详情界面
-            AppController.navigateTo(context, AppRoutes.ROUTE_APP_SETTING);
           },
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(adapt(5))),
@@ -126,7 +125,7 @@ class _SettingPageState extends BaseState<SettingPage> {
             ),
             onTap: () {
               /// 个人信息
-              AppController.navigateTo(context, AppRoutes.ROUTE_APP_SETTING);
+              AppController.navigateTo(context, AppRoutes.ROUTE_APP_SETTING_MINE);
             },
           ),
           Expanded(

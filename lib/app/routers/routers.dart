@@ -2,6 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:seekyouapp/app/routers/router_handler.dart';
 import 'package:seekyouapp/ui/page/setting_page.dart';
+import 'package:seekyouapp/ui/page/user/edit_mine_page.dart';
 
 /// 定义
 class AppRoutes {
@@ -20,7 +21,10 @@ class AppRoutes {
   static const String ROUTE_DEV_TEST_HELPER = "/dev/test/helper"; // 趣鸭测试助手页面
   static const String ROUTE_DEV_SCREEN = "/dev/screen"; // 测试屏幕的尺寸的界面
   static const String ROUTE_DEV_TEST = "/dev/test"; // 开发中查看测试的界面
+
+  /// 设置界面
   static const String ROUTE_APP_SETTING = "/app/setting";
+  static const String ROUTE_APP_SETTING_MINE = "/app/setting/mine";
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = widgetNotFoundHandler;
@@ -30,6 +34,7 @@ class AppRoutes {
     // router.define(ROUTE_DEV_SCREEN, handler: RouteHandler.create(new ScreenUtilTest(title: "屏幕测试"))); // ROUTE_DEV_SCREEN
 
     router.define(ROUTE_APP_SETTING, handler: create(new SettingPage())); // ROUTE_WIDGET_CHART
+    router.define(ROUTE_APP_SETTING_MINE, handler: create(new EditMinePage())); // ROUTE_WIDGET_CHART
   }
 
   static Handler create(Widget widget) {

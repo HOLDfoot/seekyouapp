@@ -40,6 +40,7 @@ dependencies:
   path_provider: ^1.1.0
   fluro: ^1.4.0
   flutter_screenutil: ^0.5.2
+  event_bus: ^1.1.0
 
 
 dev_dependencies:
