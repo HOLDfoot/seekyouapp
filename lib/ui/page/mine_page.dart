@@ -113,7 +113,16 @@ class _MinePageState extends State<MinePage> {
                                   onTap: () {
                                     _choosePhoto(context);
                                   },
-                                  child: Count()
+                                  child:ClipOval(
+                                    child: FadeInImage.assetNetwork(
+                                      placeholder: DevConstant.CONST_PLACEHOLDER,
+                                      fit: BoxFit.cover,
+                                      image: context.watch<UserProvider>().userPhoto,
+                                      //image: Provider.of<UserProvider>(context).userPhoto,
+                                      width: 80,
+                                      height: 80,
+                                    ),
+                                  )
                                 ),
                               ),
                               Container(
@@ -245,21 +254,4 @@ class _MinePageState extends State<MinePage> {
 
   String userPhoto =
       "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1993946481,547847354&fm=26&gp=0.jpg";
-}
-class Count extends StatelessWidget {
-  const Count({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipOval(
-      child: FadeInImage.assetNetwork(
-        placeholder: DevConstant.CONST_PLACEHOLDER,
-        fit: BoxFit.cover,
-        image: context.watch<UserProvider>().userPhoto,
-        //image: Provider.of<UserProvider>(context).userPhoto,
-        width: 80,
-        height: 80,
-      ),
-    );
-  }
 }
