@@ -12,6 +12,7 @@ class User {
   String userName; // name
   String userGender;
   String userDesc;
+  String userPhoto;
 
   User(
       {this.age,

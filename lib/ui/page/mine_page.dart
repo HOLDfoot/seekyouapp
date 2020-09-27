@@ -3,8 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:seekyouapp/app/provider/UserProvider.dart';
 import 'package:seekyouapp/app/routers/navigate.dart';
 import 'package:seekyouapp/app/routers/routers.dart';
+import 'package:seekyouapp/data/manager/user.dart';
+import 'package:seekyouapp/data/manager/user_manager.dart';
 import 'package:seekyouapp/net/api/app_api.dart';
 import 'package:seekyouapp/net/service/result_data.dart';
 import 'package:seekyouapp/net/widget/dialog_param.dart';
@@ -109,15 +113,7 @@ class _MinePageState extends State<MinePage> {
                                   onTap: () {
                                     _choosePhoto(context);
                                   },
-                                  child: ClipOval(
-                                    child: FadeInImage.assetNetwork(
-                                      placeholder: DevConstant.CONST_PLACEHOLDER,
-                                      fit: BoxFit.cover,
-                                      image: userPhoto,
-                                      width: 80,
-                                      height: 80,
-                                    ),
-                                  ),
+                                  child: Count()
                                 ),
                               ),
                               Container(
@@ -222,14 +218,7 @@ class _MinePageState extends State<MinePage> {
     new ShowParam(barrierDismissible: false, showBackground: true);
     showParam.text = "正在上传头像...";
     LoadingDialogUtil.showTextLoadingDialog(context, showParam);
-    logger.d("imageFile path= " + imageFile?.path);
     int length = await imageFile.length();
-    logger.d("imageFile length= " + length.toString());
-    /*var result = await FlutterImageCompress.compressAndGetFile(
-      imageFile.absolute.path,
-      imageFile.path,
-      quality: 80,
-    );*/
     int times = 0;
     while (length >= 1 * 1024 * 1024) {
       // 文件大小大于1M
@@ -241,18 +230,36 @@ class _MinePageState extends State<MinePage> {
       await result.writeAsBytes(byteList);
       imageFile = result;
       length = await result.length();
-      logger.d("imageFile length= " +
-          length.toString() +
-          " times= " +
-          times.toString());
       times++;
     }
-    logger.d("上传头像 imageFile = " + imageFile.toString());
     ResultData resultData =
     await AppApi.getInstance().uploadUserIcon(context, imageFile);
     showParam.pop();
+    String userPhoto = resultData.data["userPhoto"];
+    User user = AccountManager.getInstance().getUser();
+    user.userPhoto = userPhoto;
+    context.read<UserProvider>().updatePhoto(userPhoto);
+
+    //AccountManager.getInstance().updateUser(user);
   }
 
   String userPhoto =
       "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1993946481,547847354&fm=26&gp=0.jpg";
+}
+class Count extends StatelessWidget {
+  const Count({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipOval(
+      child: FadeInImage.assetNetwork(
+        placeholder: DevConstant.CONST_PLACEHOLDER,
+        fit: BoxFit.cover,
+        image: context.watch<UserProvider>().userPhoto,
+        //image: Provider.of<UserProvider>(context).userPhoto,
+        width: 80,
+        height: 80,
+      ),
+    );
+  }
 }

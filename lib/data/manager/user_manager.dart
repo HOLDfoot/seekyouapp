@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:seekyouapp/data/constant/sp_constant.dart';
 import 'package:seekyouapp/data/manager/user.dart';
 import 'package:seekyouapp/data/manager/cache_manager.dart';
@@ -73,9 +74,9 @@ class AccountManager {
     //AppApi.getInstance().logOut(context, param);
   }
 
-  Future<void> init() async {
+  Future<User> initUser() async {
     //if (_user != null) return;
-    if (_isInit) return;
+    if (_isInit) return _user;
     String userStr = await SpUtil.getString(SpConstant.SP_USER_INFO);
     if (!ObjectUtil.isEmpty(userStr)) {
       Logger.log("userStr= " + userStr);
@@ -85,6 +86,7 @@ class AccountManager {
       Logger.log("userStr= " + "null");
     }
     _isInit = true;
+    return _user;
   }
 
   bool isInit() {
@@ -124,5 +126,11 @@ class AccountManager {
 
   /// 清除第三方sdk的userId
   void clearSdkUser() {
+  }
+
+  void updateUser(BuildContext context, User user) {
+    _user = user;
+    // 发起User更新通知
+    //Provider.of<User>(context).userPhoto = user.userPhoto;
   }
 }
