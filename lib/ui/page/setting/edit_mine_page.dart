@@ -25,9 +25,11 @@ class EditMinePage extends BaseStatefulPage {
 class _EditMinePageState extends BaseState<EditMinePage> {
 
   final TextEditingController _nameController = new TextEditingController(text: "");
+  final TextEditingController _contactController = new TextEditingController(text: "");
   final TextEditingController _ageController = new TextEditingController(text: "");
   final TextEditingController _genderController = new TextEditingController(text: "");
   final TextEditingController _descController = new TextEditingController(text: "");
+  final TextEditingController _hobbyController = new TextEditingController(text: "");
 
   User _user;
 
@@ -208,6 +210,42 @@ class _EditMinePageState extends BaseState<EditMinePage> {
             child: Container(
                 color: Colors.white,
                 height:  adapt(78),
+                margin: EdgeInsets.only(top: adapt(1), bottom: adapt(10)),
+                padding: EdgeInsets.only(left: adapt(15), top: adapt(15)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Text(
+                        "联系方式",
+                        style: TextStyle(fontSize: sp(15), color: Color(0xFF222222)),
+                      ),
+                    ),
+                    SizedBox(height: adapt(3)),
+                    Expanded(
+                      child: Container(
+                        child: TextField(
+                          keyboardType: TextInputType.text,
+                          style: TextStyle(fontSize: sp(15), color: Color(0xFF222222)),
+                          maxLines: 2,
+                          decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(0),
+                              border: InputBorder.none,
+                              hintStyle: TextStyle(
+                                  color: Color(0xFFCECECE), fontSize: sp(15)),
+                              hintText: "微信号或QQ号"),
+                          controller: _contactController,
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+          ),
+          InkWell(
+            child: Container(
+                color: Colors.white,
+                height:  adapt(78),
                 margin: EdgeInsets.only(bottom: adapt(10)),
                 padding: EdgeInsets.only(left: adapt(15), top: adapt(15)),
                 child: Column(
@@ -248,6 +286,50 @@ class _EditMinePageState extends BaseState<EditMinePage> {
               _clickProfileSelect();
             },
           ),
+          InkWell(
+            child: Container(
+                color: Colors.white,
+                height:  adapt(78),
+                margin: EdgeInsets.only(bottom: adapt(10)),
+                padding: EdgeInsets.only(left: adapt(15), top: adapt(15)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Text(
+                        "爱好",
+                        style: TextStyle(fontSize: sp(15), color: Color(0xFF222222)),
+                      ),
+                    ),
+                    SizedBox(height: adapt(3)),
+                    Expanded(
+                      child: Container(
+                        child: TextField(
+                          enableInteractiveSelection: false,
+                          keyboardType: TextInputType.text,
+                          style: TextStyle(fontSize: sp(15), color: Color(0xFF222222)),
+                          decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(0),
+                              border: InputBorder.none,
+                              hintStyle: TextStyle(
+                                  color: Color(0xFFCECECE), fontSize: sp(15)),
+                              hintText: "找到和你相似的人"),
+                          onTap: () {
+                            FocusScope.of(context).requestFocus(new FocusNode());
+                            _clickHobbySelect();
+                          },
+                          controller: _hobbyController,
+                          maxLines: 2,
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+            onTap: () {
+              _clickHobbySelect();
+            },
+          ),
         ],
       ),
     );
@@ -275,6 +357,16 @@ class _EditMinePageState extends BaseState<EditMinePage> {
     AppController.navigateTo(context, AppRoutes.ROUTE_SETTING_MINE_DESC + "?userDesc=$uriEncode").then((value) {
       setState(() {
         _descController.text = value;
+      });
+    });
+  }
+
+  /// 爱好
+  _clickHobbySelect() {
+    String uriEncode = Uri.encodeComponent(_hobbyController.text??"");
+    AppController.navigateTo(context, AppRoutes.ROUTE_SETTING_MINE_HOBBIES + "?userHobbies=$uriEncode").then((value) {
+      setState(() {
+        _hobbyController.text = value;
       });
     });
   }
