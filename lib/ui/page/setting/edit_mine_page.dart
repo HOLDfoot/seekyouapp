@@ -2,6 +2,8 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:seekyouapp/app/routers/navigate.dart';
+import 'package:seekyouapp/app/routers/routers.dart';
 import 'package:seekyouapp/data/constant/app_color.dart';
 import 'package:seekyouapp/data/manager/user.dart';
 import 'package:seekyouapp/data/manager/user_manager.dart';
@@ -269,13 +271,12 @@ class _EditMinePageState extends BaseState<EditMinePage> {
 
   /// 简介
   _clickProfileSelect() {
-    logger.d("_clickProfileSelect _descController.text= " + _descController.text);
-    /*Navigator.of(context).pushNamed(RouteName.ROUTE_MINE_EDIT_INTRO,arguments: {"url":_descController.text??""}).then((value){
-      logger.d("_clickProfileSelect value= " + value);
+    String uriEncode = Uri.encodeComponent(_descController.text??"");
+    AppController.navigateTo(context, AppRoutes.ROUTE_SETTING_MINE_DESC + "?userDesc=$uriEncode").then((value) {
       setState(() {
         _descController.text = value;
       });
-    });*/
+    });
   }
 
   /// 保存

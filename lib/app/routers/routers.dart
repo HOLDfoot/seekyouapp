@@ -3,8 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:seekyouapp/app/routers/router_handler.dart';
 import 'package:seekyouapp/main.dart';
 import 'package:seekyouapp/ui/page/login_page.dart';
+import 'package:seekyouapp/ui/page/setting/edit_intro_page.dart';
+import 'package:seekyouapp/ui/page/setting/edit_mine_page.dart';
 import 'package:seekyouapp/ui/page/setting_page.dart';
-import 'package:seekyouapp/ui/page/user/edit_mine_page.dart';
 
 /// 定义
 class AppRoutes {
@@ -27,12 +28,13 @@ class AppRoutes {
   /// 主界面
   static const String ROUTE_MAIN = "/main";
 
-  /// 设置界面
-  static const String ROUTE_APP_SETTING = "/setting";
-  static const String ROUTE_APP_SETTING_MINE = "/setting/mine";
-
   /// 登录注册相关界面
   static const String ROUTE_USER_SIGN = "/user/sign";
+
+  /// 设置界面
+  static const String ROUTE_SETTING = "/setting";
+  static const String ROUTE_SETTING_MINE = "/setting/mine";
+  static const String ROUTE_SETTING_MINE_DESC = "/setting/mine/desc";
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = widgetNotFoundHandler;
@@ -41,23 +43,33 @@ class AppRoutes {
     // router.define(ROUTE_DEV_TEST_HELPER, handler: RouteHandler.create(new QuTesterPage())); // ROUTE_DEV_TEST_HELPER
     // router.define(ROUTE_DEV_SCREEN, handler: RouteHandler.create(new ScreenUtilTest(title: "屏幕测试"))); // ROUTE_DEV_SCREEN
 
-    router.define(ROUTE_MAIN, handler: create(new BottomWidget()));
+    router.define(ROUTE_MAIN, handler: createHandler(new BottomWidget()));
 
-    router.define(ROUTE_APP_SETTING, handler: create(new SettingPage()));
-    router.define(ROUTE_APP_SETTING_MINE, handler: create(new EditMinePage()));
-    router.define(ROUTE_USER_SIGN, handler: create(new LoginPage()));
+    router.define(ROUTE_USER_SIGN, handler: createHandler(new LoginPage()));
 
+    router.define(ROUTE_SETTING, handler: createHandler(new SettingPage()));
+    router.define(ROUTE_SETTING_MINE, handler: createHandler(new EditMinePage()));
+    router.define(ROUTE_SETTING_MINE_DESC, handler: createParamHandler((_) {
+      return EditIntroPage(pageParam: _);
+    }));
   }
 
-  static Handler create(Widget widget) {
+  static Handler createHandler(Widget widget) {
     return new Handler(
         handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       return widget;
     });
   }
+
+  static Handler createParamHandler(PageCreateFunc pageCreateFunc) {
+    return new Handler(
+        handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return pageCreateFunc(params);
+    });
+  }
 }
 
-// typedef Widget PageCreateFunc(Map<String, List<String>> params);
+typedef Widget PageCreateFunc(Map<String, List<String>> params);
 
 // class RouteHandler {
 //   static Handler createMoodPage() {

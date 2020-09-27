@@ -179,7 +179,7 @@ class _MinePageState extends State<MinePage> {
             child: Column(
               children: [
                 getLineWidget(title: "设置", icon: Icons.settings, callback: () {
-                  AppController.navigateTo(context, AppRoutes.ROUTE_APP_SETTING);
+                  AppController.navigateTo(context, AppRoutes.ROUTE_SETTING);
                 }),
                 getLineWidget(title: "关注我的人", icon: Icons.person_add),
                 getLineWidget(title: "喜欢的文章", icon: Icons.art_track),

@@ -311,7 +311,7 @@ class LoginPageState extends State<LoginPage> {
     if (resultData.isSuccess()) {
       // 缓存用户信息, 然后结束本页面
       User user = User.fromJson(resultData.data);
-      AccountManager.getInstance().logIn(user);
+      AccountManager.getInstance().logIn(context, user);
       Navigator.of(context).pop();
     } else {
       resultData.toast();

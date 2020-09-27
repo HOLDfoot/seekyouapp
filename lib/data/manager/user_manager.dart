@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:seekyouapp/app/provider/UserProvider.dart';
 import 'package:seekyouapp/data/constant/sp_constant.dart';
 import 'package:seekyouapp/data/manager/user.dart';
 import 'package:seekyouapp/data/manager/cache_manager.dart';
@@ -52,9 +53,15 @@ class AccountManager {
   }
 
   /// 用户注册/登录后, 更新用户信息(sdk/内存/外存)
-  logIn(User user) {
+  logIn(BuildContext context, User user) {
     cacheUser(user);
     setSdkUser();
+    notifyUserOnUi(context);
+  }
+
+  void notifyUserOnUi(BuildContext context) {
+    context.read<UserProvider>().updatePhoto(_user.userPhoto);
+
   }
 
   /// 用户已登录情况下启动App过程中, 更新用户信息(sdk)
@@ -74,13 +81,15 @@ class AccountManager {
     //AppApi.getInstance().logOut(context, param);
   }
 
-  Future<User> initUser() async {
+  Future<User> initUser(BuildContext context) async {
     //if (_user != null) return;
     if (_isInit) return _user;
     String userStr = await SpUtil.getString(SpConstant.SP_USER_INFO);
     if (!ObjectUtil.isEmpty(userStr)) {
       Logger.log("userStr= " + userStr);
       _user = User.fromJson(json.decode(userStr));
+      notifyUserOnUi(context);
+
       doWhenAlreadyLogin();
     } else {
       Logger.log("userStr= " + "null");

@@ -18,7 +18,7 @@ class InitManager {
   }
 
   void initContext(BuildContext context) {
-    AccountManager.getInstance().initUser();
+    AccountManager.getInstance().initUser(context);
     if (AccountManager.getInstance().isLogin()) {
       //AccountManager.getInstance().refreshFromNet(context);
     }

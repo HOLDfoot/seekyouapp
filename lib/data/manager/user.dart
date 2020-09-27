@@ -14,6 +14,14 @@ class User {
   String userDesc;
   String userPhoto;
 
+  /// 用户的爱好, 用以区分同类和异类
+  List<String> userHobbies;
+
+  /// 用户的微信, 当互相关注后可以看到对方的微信和邮箱
+  String userWx;
+  String userQq;
+
+
   User(
       {this.age,
       this.email,

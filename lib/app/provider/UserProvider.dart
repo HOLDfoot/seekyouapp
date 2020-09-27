@@ -19,6 +19,7 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   void updatePhoto(String photo) {
+    if (photo == null) return;
     _userPhoto = photo;
     notifyListeners();
     print("updatePhoto");

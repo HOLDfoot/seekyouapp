@@ -125,7 +125,7 @@ class _SettingPageState extends BaseState<SettingPage> {
             ),
             onTap: () {
               /// 个人信息
-              AppController.navigateTo(context, AppRoutes.ROUTE_APP_SETTING_MINE);
+              AppController.navigateTo(context, AppRoutes.ROUTE_SETTING_MINE);
             },
           ),
           Expanded(
