@@ -1,57 +1,53 @@
 class User {
-  int age;
-  String email;
-  int id;
-  String name;
-  String password;
+    int userAge;
+    String userDesc;
+    String userEmail;
+    String userGender;
 
-  String userId;
-  String userToken;
+    /// 用户的爱好, 用以区分同类和异类可以通过StringUtils转成List<String>
+    String userHobbies;
 
-  String userAge; // age
-  String userName; // name
-  String userGender;
-  String userDesc;
-  String userPhoto;
+    String userId;
+    String userName;
+    String userPassword;
+    String userPhoto;
+    String userQq;
+    String userToken;
+    String userWx;
 
-  /// 用户的爱好, 用以区分同类和异类
-  List<String> userHobbies;
+    User({this.userAge, this.userDesc, this.userEmail, this.userGender, this.userHobbies, this.userId, this.userName, this.userPassword, this.userPhoto, this.userQq, this.userToken, this.userWx});
 
-  /// 用户的微信, 当互相关注后可以看到对方的微信和邮箱
-  String userWx;
-  String userQq;
+    factory User.fromJson(Map<String, dynamic> json) {
+        return User(
+            userAge: json['userAge'], 
+            userDesc: json['userDesc'], 
+            userEmail: json['userEmail'], 
+            userGender: json['userGender'], 
+            userHobbies: json['userHobbies'], 
+            userId: json['userId'], 
+            userName: json['userName'], 
+            userPassword: json['userPassword'], 
+            userPhoto: json['userPhoto'], 
+            userQq: json['userQq'], 
+            userToken: json['userToken'], 
+            userWx: json['userWx'], 
+        );
+    }
 
-
-  User(
-      {this.age,
-      this.email,
-      this.id,
-      this.name,
-      this.password,
-      this.userId,
-      this.userToken});
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      age: json['age'],
-      email: json['email'],
-      id: json['id'],
-      name: json['name'],
-      password: json['password'],
-      userId: json['userId'],
-      userToken: json['userToken'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['age'] = this.age;
-    data['email'] = this.email;
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['password'] = this.password;
-    data['userId'] = this.userId;
-    data['userToken'] = this.userToken;
-    return data;
-  }
+    Map<String, dynamic> toJson() {
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['userAge'] = this.userAge;
+        data['userDesc'] = this.userDesc;
+        data['userEmail'] = this.userEmail;
+        data['userGender'] = this.userGender;
+        data['userHobbies'] = this.userHobbies;
+        data['userId'] = this.userId;
+        data['userName'] = this.userName;
+        data['userPassword'] = this.userPassword;
+        data['userPhoto'] = this.userPhoto;
+        data['userQq'] = this.userQq;
+        data['userToken'] = this.userToken;
+        data['userWx'] = this.userWx;
+        return data;
+    }
 }

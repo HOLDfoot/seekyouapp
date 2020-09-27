@@ -104,7 +104,7 @@ class AccountManager {
 
   String getUserId() {
     if (isLogin()) {
-      return _user.id.toString();
+      return _user.userId;
     } else {
       return null;
     }
@@ -113,7 +113,7 @@ class AccountManager {
   Map<String, String> getUserParam() {
     Map<String, String> userParam = {};
     if (isLogin()) {
-      userParam["userId"] = _user.id.toString();
+      userParam["userId"] = _user.userId;
       userParam["userToken"] = _user.userToken;
     }
     return userParam;

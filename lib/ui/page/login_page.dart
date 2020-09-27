@@ -298,8 +298,8 @@ class LoginPageState extends State<LoginPage> {
   /// 将账号密码发送到服务器验证, 返回后进入下一个界面
   void _doLogin() async {
     Map<String, dynamic> param = {};
-    param["email"] = email.trim();
-    param["password"] = pass1.trim();
+    param["userEmail"] = email.trim();
+    param["userPassword"] = pass1.trim();
     ResultData resultData;
     if (iSignUp) {
       resultData =
