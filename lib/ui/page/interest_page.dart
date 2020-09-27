@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/ball_pulse_header.dart';
 import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
+import 'package:seekyouapp/ui/constant/DevConstant.dart';
 
 /// 会员购买记录
 class InterestPage extends StatefulWidget {
@@ -70,7 +71,7 @@ class InterestPageState extends State<InterestPage> {
 
   /// 网络失败则返回null, 成功则有数据
   Future<List<UserInfo>> getData() async {
-    UserInfo item = UserInfo(name: "小明", photo: CONST_PIC);
+    UserInfo item = UserInfo(name: "小明", photo: DevConstant.CONST_PIC_BOY);
     List<UserInfo> userInfoList = [];
     for (int i = 0; i < pageSize; i++) {
       userInfoList.add(item);
@@ -193,5 +194,3 @@ class SearchResultEmptyWidget extends StatelessWidget {
     return Text(this.title);
   }
 }
-
-const String CONST_PIC = "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=375015144,848773525&fm=26&gp=0.jpg";

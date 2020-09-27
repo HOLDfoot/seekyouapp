@@ -163,6 +163,7 @@ class HomePageState extends State<HomePage> {
 
   /// 获取item Widget
   Widget getChildWidget(int index) {
+    print("${userList[index].photo}");
     return Card(
       child: CachedNetworkImage(
         imageUrl: userList[index].photo,
