@@ -247,6 +247,7 @@ class _MinePageState extends State<MinePage> {
     String userPhoto = resultData.data["userPhoto"];
     User user = AccountManager.getInstance().getUser();
     user.userPhoto = userPhoto;
+    AccountManager.getInstance().cacheUser(user);
     context.read<UserProvider>().updatePhoto(userPhoto);
 
     //AccountManager.getInstance().updateUser(user);

@@ -18,6 +18,7 @@ class AppApi extends AppNetService {
   static const String _SIGN_IN = "/signin";
   static const String _GET_USER_INFO = "/user/get_user_info";
   static const String _UPLOAD_USER_ICON = "/upload_photo";
+  static const String _UPDATE_USER = "/update_user";
 
   AppApi._();
 
@@ -83,6 +84,14 @@ class AppApi extends AppNetService {
     ResultData resultData = await upLoad(file, fileName, _UPLOAD_USER_ICON);
     showParam.pop();
     // 结束进度
+    resultData.toast();
+    return resultData;
+  }
+
+  Future<ResultData> updateUser(BuildContext context, bool showProgress,
+      Map<String, dynamic> param) async {
+    ResultData resultData = await post(_UPDATE_USER,
+        params: param, context: context, showLoad: showProgress);
     resultData.toast();
     return resultData;
   }

@@ -9,6 +9,13 @@ void main() {
     print("test tearDown");
   });
 
+  // 失败, 无法匹配到空格
+  test("正则测试", () async {
+    String userHobbies = "abcaaabcdabcde";
+    List hobbies = userHobbies.split("a");
+    print(hobbies);
+  });
+
   test("List序列化", () async {
     List list = List();
     list.add("hello0");
