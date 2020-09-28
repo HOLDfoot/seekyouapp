@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:seekyouapp/app/routers/router_handler.dart';
 import 'package:seekyouapp/main.dart';
 import 'package:seekyouapp/ui/page/login_page.dart';
+import 'package:seekyouapp/ui/page/setting/contact_author.dart';
 import 'package:seekyouapp/ui/page/setting/edit_hobby_page.dart';
 import 'package:seekyouapp/ui/page/setting/edit_intro_page.dart';
 import 'package:seekyouapp/ui/page/setting/edit_mine_page.dart';
@@ -37,6 +38,7 @@ class AppRoutes {
   static const String ROUTE_SETTING_MINE = "/setting/mine";
   static const String ROUTE_SETTING_MINE_DESC = "/setting/mine/desc";
   static const String ROUTE_SETTING_MINE_HOBBIES = "/setting/mine/hobbies";
+  static const String ROUTE_SETTING_AUTHOR = "/setting/author";
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = widgetNotFoundHandler;
@@ -57,6 +59,8 @@ class AppRoutes {
     router.define(ROUTE_SETTING_MINE_HOBBIES, handler: createParamHandler((_) {
       return EditHobbyPage(pageParam: _);
     }));
+    router.define(ROUTE_SETTING_AUTHOR, handler: createHandler(new ContactAuthorPage()));
+
   }
 
   static Handler createHandler(Widget widget) {

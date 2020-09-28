@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/ball_pulse_header.dart';
 import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
-import 'package:seekyouapp/ui/constant/DevConstant.dart';
+import 'package:seekyouapp/ui/constant/dev_constant.dart';
 
 /// 会员购买记录
 class HomePage extends StatefulWidget {

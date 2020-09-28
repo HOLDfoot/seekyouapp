@@ -7,6 +7,7 @@ import 'package:seekyouapp/app/routers/navigate.dart';
 import 'package:seekyouapp/app/routers/routers.dart';
 import 'package:seekyouapp/data/manager/InitManager.dart';
 import 'package:seekyouapp/data/manager/user_manager.dart';
+import 'package:seekyouapp/platform/wrapper/service_locator.dart';
 import 'package:seekyouapp/ui/page/home_page.dart';
 import 'package:seekyouapp/ui/page/interest_page.dart';
 import 'package:seekyouapp/ui/page/login_page.dart';
@@ -16,6 +17,9 @@ import 'app/provider/Counter.dart';
 import 'data/manager/user.dart';
 
 void main() {
+  // 注册服务
+  setupLocator();
+
   runApp(
     /// Providers are above [MyApp] instead of inside it, so that tests
     /// can use [MyApp] while mocking the providers

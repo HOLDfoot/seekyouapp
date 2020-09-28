@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:seekyouapp/data/manager/user.dart';
-import 'package:seekyouapp/ui/constant/DevConstant.dart';
+import 'package:seekyouapp/ui/constant/dev_constant.dart';
 
 /// Mix-in [DiagnosticableTreeMixin] to have access to [debugFillProperties] for the devtool
 class UserProvider with ChangeNotifier, DiagnosticableTreeMixin {

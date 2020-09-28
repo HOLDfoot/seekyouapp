@@ -128,6 +128,35 @@ class _SettingPageState extends BaseState<SettingPage> {
               AppController.navigateTo(context, AppRoutes.ROUTE_SETTING_MINE);
             },
           ),
+          InkWell(
+            child: Container(
+              color: Theme.of(context).cardColor,
+              height: adapt(48),
+              padding: EdgeInsets.only(left: adapt(15), right: adapt(20)),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Text("联系作者",
+                        style: TextStyle(
+                          fontSize: sp(16),
+                          fontWeight: FontWeight.normal,
+                        )),
+                  ),
+                  Image.asset(
+                    'assets/images/ic_black_right_arrow_8_14.png',
+                    fit: BoxFit.contain,
+                    width: adapt(8),
+                    height: adapt(14),
+                  ),
+                ],
+              ),
+            ),
+            onTap: () {
+              /// 联系作者
+              AppController.navigateTo(context, AppRoutes.ROUTE_SETTING_AUTHOR);
+            },
+          ),
           Expanded(
             child: Align(
               alignment: FractionalOffset.bottomCenter,

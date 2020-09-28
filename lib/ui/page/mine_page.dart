@@ -13,7 +13,7 @@ import 'package:seekyouapp/net/api/app_api.dart';
 import 'package:seekyouapp/net/service/result_data.dart';
 import 'package:seekyouapp/net/widget/dialog_param.dart';
 import 'package:seekyouapp/net/widget/loading_dialog.dart';
-import 'package:seekyouapp/ui/constant/DevConstant.dart';
+import 'package:seekyouapp/ui/constant/dev_constant.dart';
 import 'package:seekyouapp/util/logger.dart';
 import 'package:seekyouapp/util/path_util.dart';
 import 'package:seekyouapp/util_set.dart';
