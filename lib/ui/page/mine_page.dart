@@ -134,13 +134,13 @@ class _MinePageState extends State<MinePage> {
                                       padding: EdgeInsets.only(top: 20),
                                     ),
                                     Text(
-                                      "新世界",
+                                      context.watch<UserProvider>().userName,
                                       style: TextStyle(fontSize: 20),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(top: 10),
                                     ),
-                                    Text("富强民主文明和谐"),
+                                    Text(context.watch<UserProvider>().userDesc),
                                   ],
                                 ),
                               )

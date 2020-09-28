@@ -59,9 +59,10 @@ class AccountManager {
     notifyUserOnUi(context);
   }
 
+  /// 解决provider初始化完成后还没有成功读取user的问题
   void notifyUserOnUi(BuildContext context) {
     context.read<UserProvider>().updatePhoto(_user.userPhoto);
-
+    context.read<UserProvider>().updateUser(_user);
   }
 
   /// 用户已登录情况下启动App过程中, 更新用户信息(sdk)
@@ -88,8 +89,8 @@ class AccountManager {
     if (!ObjectUtil.isEmpty(userStr)) {
       Logger.log("userStr= " + userStr);
       _user = User.fromJson(json.decode(userStr));
-      notifyUserOnUi(context);
 
+      notifyUserOnUi(context);
       doWhenAlreadyLogin();
     } else {
       Logger.log("userStr= " + "null");

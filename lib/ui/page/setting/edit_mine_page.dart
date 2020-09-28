@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:seekyouapp/app/provider/UserProvider.dart';
 import 'package:seekyouapp/app/routers/navigate.dart';
 import 'package:seekyouapp/app/routers/routers.dart';
 import 'package:seekyouapp/data/constant/app_color.dart';
@@ -56,8 +57,8 @@ class _EditMinePageState extends BaseState<EditMinePage> {
         ? ""
         : _user.userGender == "f" ? "女" : "男";
     _descController.text = _user.userDesc;
-
-    _currentGender = _user.userGender;
+    _contactController.text = TextUtil.isEmpty(_user.userWx) ? _user.userQq : _user.userWx;
+    _hobbyController.text = _user.userHobbies;
   }
 
   @override
@@ -360,17 +361,14 @@ class _EditMinePageState extends BaseState<EditMinePage> {
     );
   }
 
-  String _currentGender;
-
   /// 性别
   _clickGenderSelect() {
     logger.d("_clickGenderSelect _currentGender");
     ChooseGenderDialog chooseGenderDialog =
-        ChooseGenderDialog(_currentGender, (select, text) {
+        ChooseGenderDialog(_genderController.text, (select, text) {
       logger.d("_clickGenderSelect select= " + select + " text= " + text);
       setState(() {
         _genderController.text = text;
-        _currentGender = select;
       });
     });
     showDialog(
@@ -399,44 +397,52 @@ class _EditMinePageState extends BaseState<EditMinePage> {
     AppController.navigateTo(context,
             AppRoutes.ROUTE_SETTING_MINE_HOBBIES + "?userHobbies=$uriEncode")
         .then((value) {
+      String userHobbies = value.trim();
+      if (!TextUtil.isEmpty(userHobbies)) {
+        List hobbies = userHobbies.split(" ");
+        // 移除多个空格split的情况
+        hobbies.removeWhere((element) {
+          return TextUtil.isEmpty(element);
+        });
+        userHobbies = StringUtils.join(hobbies, ",");
+      }
       setState(() {
-        _hobbyController.text = value;
+        _hobbyController.text = userHobbies;
       });
     });
   }
 
   /// 保存
   _clickSaveEdit() async {
-    User user = new User();
-    user.userName = _nameController.text;
-    if (!CharUtil.isOnlyChar(user.userName)) {
+    User updateUser = new User();
+    updateUser.userName = _nameController.text;
+    if (!CharUtil.isOnlyChar(updateUser.userName)) {
       Fluttertoast.showToast(msg: "名字只能是字母或数字");
       return;
     }
-    user.userAge = int.parse(_ageController.text);
-    if (user.userAge > 99 || user.userAge < 16) {
+    updateUser.userAge = int.parse(_ageController.text);
+    if (updateUser.userAge > 99 || updateUser.userAge < 16) {
       Fluttertoast.showToast(msg: "年龄[16,99]");
       return;
     }
-    user.userGender = _genderController.text == "男" ? "m" : "f";
+    updateUser.userGender = _genderController.text == "男" ? "m" : _genderController.text == "女" ? "f" : null;
     String contact = _contactController.text;
     if (RegexUtil.isQQ(contact)) {
-      user.userQq = contact;
+      updateUser.userQq = contact;
     } else {
-      user.userWx = contact;
+      updateUser.userWx = contact;
     }
-    user.userDesc = _descController.text;
-    user.userHobbies = _hobbyController.text.trim();
-    if (!TextUtil.isEmpty(user.userHobbies)) {
-      List hobbies = user.userHobbies.split(" ");
-      hobbies.removeWhere((element) {
-        return TextUtil.isEmpty(element);
-      });
-      user.userHobbies = StringUtils.join(hobbies, ",");
-    }
-    Map<String, dynamic> param = user.toJson();
+    updateUser.userDesc = _descController.text;
+    updateUser.userHobbies = _hobbyController.text;
+
+    Map<String, dynamic> param = updateUser.toJson();
     ResultData resultData = await AppApi.getInstance().updateUser(context, true, param);
     if (resultData.isSuccess()) {
+      User user = User.fromJson(resultData.data);
+      AccountManager.getInstance().cacheUser(user);
+      //context.read<UserProvider>().updateUser(_user);
+      AccountManager.getInstance().notifyUserOnUi(context);
+
       popThis();
     } else {
       resultData.toast();
