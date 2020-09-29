@@ -24,11 +24,9 @@ class VerticalViewPage extends BaseStatefulPage {
 }
 
 class VerticalViewPageState extends BaseState<VerticalViewPage> {
-
   PageController pageController;
   int curPageIndex;
   List<User> userList;
-
 
   @override
   void initState() {
@@ -45,7 +43,6 @@ class VerticalViewPageState extends BaseState<VerticalViewPage> {
     pageController = PageController(initialPage: index);
   }
 
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -55,19 +52,71 @@ class VerticalViewPageState extends BaseState<VerticalViewPage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-        body: PageView(
-          scrollDirection: Axis.vertical,
-          controller: pageController,
-          onPageChanged: onPageChange,
-          children: getPageViewChildren()
-        ));
+        body: PageView.builder(
+            scrollDirection: Axis.vertical,
+            controller: pageController,
+            onPageChanged: onPageChange,
+            itemCount: userList.length,
+            itemBuilder: getPageViewItemWidget));
   }
 
-  List<Widget> getPageViewChildren() {
-    List<Widget> children = [];
-    userList.forEach((e) {
-      Widget widget = CachedNetworkImage(
-        imageUrl: e.userPhoto,
+  Widget getPageViewItemWidget(BuildContext context, int index) {
+    return PageViewItem(
+      user: userList[index],
+    );
+  }
+
+  void onPageChange(int nextPage) {
+    curPageIndex = nextPage;
+  }
+}
+
+class PageViewItem extends BaseStatefulPage {
+  User user;
+
+  PageViewItem({Key key, this.user}) : super(key: key);
+
+  @override
+  PageViewItemState createState() {
+    return PageViewItemState(user: user);
+  }
+}
+
+class PageViewItemState extends BaseState<PageViewItem> {
+  User user;
+
+  PageViewItemState({this.user});
+
+  PageController pageController;
+  int curPageIndex;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Stack(
+      children: [
+        makePhotoWidget(),
+        PageView.builder(
+            scrollDirection: Axis.horizontal,
+            controller: pageController,
+            onPageChanged: onPageChange,
+            itemCount: 3,
+            itemBuilder: getPageViewItemWidget)
+      ],
+    ));
+  }
+
+  Widget makePhotoWidget() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      child: CachedNetworkImage(
+        imageUrl: user.userPhoto,
         fit: BoxFit.cover,
         placeholder: (context, url) => Center(
           child: SizedBox(
@@ -77,19 +126,61 @@ class VerticalViewPageState extends BaseState<VerticalViewPage> {
           ),
         ),
         errorWidget: (context, url, error) => Icon(Icons.error),
-      );
-      children.add(widget);
-    });
+      ),
+    );
+  }
 
-    return children;
+  Widget getPageViewItemWidget(BuildContext context, int index) {
+    if (index == 0) {
+      // 用户的个人信息和❤️按钮
+      return Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            height: 120,
+            width: double.infinity,
+            color: Colors.yellow,
+          ),
+        ),
+      );
+    } else if (index == 1) {
+      return Container(); // 一个空界面
+    } else {
+      // 当前用户的征婚交友声明, 文字可以无限滚动
+      return Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.white,
+              ),
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                padding: EdgeInsets.all(adapt(15)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      child: Text("你: "),
+                    ),
+                    Container(
+                      child: Text("我: "),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ));
+    }
   }
 
   void onPageChange(int nextPage) {
     curPageIndex = nextPage;
-
-
-
-
   }
-
 }
