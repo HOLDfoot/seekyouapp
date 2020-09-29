@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/ball_pulse_header.dart';
 import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
+import 'package:seekyouapp/app/routers/navigate.dart';
+import 'package:seekyouapp/app/routers/routers.dart';
+import 'package:seekyouapp/data/manager/user.dart';
+import 'package:seekyouapp/ui/common/error_page.dart';
 import 'package:seekyouapp/ui/constant/dev_constant.dart';
 
 /// 会员购买记录
@@ -16,7 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  List<UserInfo> userList;
+  List<User> userList;
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +79,9 @@ class HomePageState extends State<HomePage> {
   bool noMore = true;
 
   /// 网络失败则返回null, 成功则有数据
-  Future<List<UserInfo>> getData() async {
-    UserInfo item = UserInfo(name: "小明", photo: DevConstant.CONST_PIC);
-    List<UserInfo> userInfoList = [];
+  Future<List<User>> getData() async {
+    User item = User(userName: "小明", userPhoto: DevConstant.CONST_PIC, userAge: 21, userDesc: "I am waiting");
+    List<User> userInfoList = [];
     for (int i = 0; i < pageSize; i++) {
       userInfoList.add(item);
     }
@@ -91,7 +96,7 @@ class HomePageState extends State<HomePage> {
   Future<void> onRefresh() async {
     // 恢复初始值
     page = 1;
-    List<UserInfo> orderData = await getData();
+    List<User> orderData = await getData();
     // 只要网络请求回来, 就已经完成了第一次加载
     if (showedLoading) {
       showedLoading = false;
@@ -111,7 +116,7 @@ class HomePageState extends State<HomePage> {
   /// 处理了: 没有更多的情况, 网络失败的情况, 分页的情况
   Future<void> onLoad() async {
     page++;
-    List<UserInfo> orderData = await getData();
+    List<User> orderData = await getData();
     if (mounted) {
       setState(() {
         if (orderData == null) {
@@ -163,51 +168,39 @@ class HomePageState extends State<HomePage> {
 
   /// 获取item Widget
   Widget getChildWidget(int index) {
-    print("${userList[index].photo}");
-    return Card(
-      child: CachedNetworkImage(
-        imageUrl: userList[index].photo,
-        fit: BoxFit.cover,
-        placeholder: (context, url) => Center(
-          child: SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(),
+    print("${userList[index].userPhoto}");
+    return GestureDetector(
+      onTap: () {
+        goPageView(index);
+      },
+      child: Card(
+        child: CachedNetworkImage(
+          imageUrl: userList[index].userPhoto,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => Center(
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(),
+            ),
           ),
+          errorWidget: (context, url, error) => Icon(Icons.error),
         ),
-        errorWidget: (context, url, error) => Icon(Icons.error),
+        /* child: Image.network(
+          userList[index].photo,
+          fit: BoxFit.cover,
+          colorBlendMode: BlendMode.colorBurn,
+          color: Colors.white10,
+        ),*/
       ),
-      /* child: Image.network(
-        userList[index].photo,
-        fit: BoxFit.cover,
-        colorBlendMode: BlendMode.colorBurn,
-        color: Colors.white10,
-      ),*/
     );
   }
 
-  double adapt(int dp) {
-    return dp * 1.0;
+  void goPageView(int index) {
+     String userJson = json.encode(userList);
+     String urlEncode = Uri.encodeComponent(userJson);
+     AppController.navigateTo(context, AppRoutes.ROUTE_USER_VERTICAL + "?index=$index&userJson=$urlEncode");
   }
 }
 
-class UserInfo {
-  String name;
-  String email;
-  String photo;
-  String introduce;
-
-  UserInfo({this.name, this.email, this.photo, this.introduce});
-}
-
-class SearchResultEmptyWidget extends StatelessWidget {
-  final String title;
-
-  SearchResultEmptyWidget({Key key, this.title = "没有数据"}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(this.title);
-  }
-}
 

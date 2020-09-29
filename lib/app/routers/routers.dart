@@ -2,6 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:seekyouapp/app/routers/router_handler.dart';
 import 'package:seekyouapp/main.dart';
+import 'package:seekyouapp/ui/page/list/vertical_page_view.dart';
 import 'package:seekyouapp/ui/page/login_page.dart';
 import 'package:seekyouapp/ui/page/setting/contact_author.dart';
 import 'package:seekyouapp/ui/page/setting/edit_hobby_page.dart';
@@ -39,6 +40,7 @@ class AppRoutes {
   static const String ROUTE_SETTING_MINE_DESC = "/setting/mine/desc";
   static const String ROUTE_SETTING_MINE_HOBBIES = "/setting/mine/hobbies";
   static const String ROUTE_SETTING_AUTHOR = "/setting/author";
+  static const String ROUTE_USER_VERTICAL = "/user/vertical";
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = widgetNotFoundHandler;
@@ -60,6 +62,9 @@ class AppRoutes {
       return EditHobbyPage(pageParam: _);
     }));
     router.define(ROUTE_SETTING_AUTHOR, handler: createHandler(new ContactAuthorPage()));
+    router.define(ROUTE_USER_VERTICAL, handler: createParamHandler((_) {
+      return VerticalViewPage(pageParam: _);
+    }));
 
   }
 
