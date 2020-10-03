@@ -66,6 +66,7 @@ class MyApp extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           home: BottomWidget(title: 'Flutter Demo Home Page'),
+          onGenerateRoute: AppController.router.generator,
         ),
       );
   }

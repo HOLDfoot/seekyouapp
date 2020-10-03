@@ -383,7 +383,9 @@ class _EditMinePageState extends BaseState<EditMinePage> {
   _clickProfileSelect() {
     String uriEncode = Uri.encodeComponent(_descController.text ?? "");
     AppController.navigateTo(
-            context, AppRoutes.ROUTE_SETTING_MINE_DESC + "?userDesc=$uriEncode")
+            context, AppRoutes.ROUTE_SETTING_MINE_DESC + "?userDesc=$uriEncode");
+    AppController.withParam(
+            context, AppRoutes.ROUTE_SETTING_MINE_DESC, params: {"userDesc" : _descController.text})
         .then((value) {
       setState(() {
         _descController.text = value;
