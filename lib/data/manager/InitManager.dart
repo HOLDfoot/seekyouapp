@@ -20,7 +20,7 @@ class InitManager {
   void initContext(BuildContext context) {
     AccountManager.getInstance().initUser(context);
     if (AccountManager.getInstance().isLogin()) {
-      //AccountManager.getInstance().refreshFromNet(context);
+      AccountManager.getInstance().refreshFromNet(context);
     }
   }
 

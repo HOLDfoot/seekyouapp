@@ -16,7 +16,7 @@ class AppApi extends AppNetService {
   static const String _GET_WEATHER = "/";
   static const String _SIGN_UP = "/signup";
   static const String _SIGN_IN = "/signin";
-  static const String _GET_USER_INFO = "/user/get_user_info";
+  static const String _GET_USER_MINE = "/get_user_mine";
   static const String _UPLOAD_USER_ICON = "/upload_photo";
   static const String _UPDATE_USER = "/update_user";
 
@@ -31,8 +31,8 @@ class AppApi extends AppNetService {
     return _instance;
   }
 
-  Future<User> getUserInfo(BuildContext context) async {
-    ResultData resultData = await post(_GET_USER_INFO);
+  Future<User> getUserMine(BuildContext context) async {
+    ResultData resultData = await get(_GET_USER_MINE);
     User user;
     if (!resultData.isFail()) {
       user = User.fromJson(resultData.data);

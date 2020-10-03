@@ -44,7 +44,7 @@ class HomePageState extends State<HomePage> {
         onLoad: noMore ? null : onLoad,
         child: GridView.count(
           crossAxisCount: 4,
-          childAspectRatio: 0.6,
+          childAspectRatio: 0.618,
           crossAxisSpacing: 0,
           mainAxisSpacing: 0,
           children: List.generate(

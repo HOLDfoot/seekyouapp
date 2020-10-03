@@ -25,8 +25,8 @@ class AccountManager {
     return _instance;
   }
 
-  refreshFromNet(BuildContext context) async{
-    User user = await AppApi.getInstance().getUserInfo(context);
+ void refreshFromNet(BuildContext context) async{
+    User user = await AppApi.getInstance().getUserMine(context);
     if (user != null) {
       cacheUser(user);
     }
