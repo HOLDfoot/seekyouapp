@@ -36,6 +36,8 @@ class _EditMinePageState extends BaseState<EditMinePage> {
       new TextEditingController(text: "");
   final TextEditingController _genderController =
       new TextEditingController(text: "");
+  final TextEditingController _locationController =
+      new TextEditingController(text: "");
   final TextEditingController _descController =
       new TextEditingController(text: "");
   final TextEditingController _hobbyController =
@@ -58,7 +60,7 @@ class _EditMinePageState extends BaseState<EditMinePage> {
         : _user.userGender == "f" ? "女" : "男";
     _descController.text = _user.userDesc;
     _contactController.text = TextUtil.isEmpty(_user.userWx) ? _user.userQq : _user.userWx;
-    _hobbyController.text = _user.userHobbies;
+    _hobbyController.text = _user.userHobbies.replaceAll(",", " ");
   }
 
   @override
@@ -274,6 +276,53 @@ class _EditMinePageState extends BaseState<EditMinePage> {
                   children: <Widget>[
                     Container(
                       child: Text(
+                        "所在位置",
+                        style: TextStyle(
+                            fontSize: sp(15), color: Color(0xFF222222)),
+                      ),
+                    ),
+                    SizedBox(height: adapt(3)),
+                    Expanded(
+                      child: Container(
+                        child: TextField(
+                          enableInteractiveSelection: false,
+                          keyboardType: TextInputType.text,
+                          style: TextStyle(
+                              fontSize: sp(15), color: Color(0xFF222222)),
+                          decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(0),
+                              border: InputBorder.none,
+                              hintStyle: TextStyle(
+                                  color: Color(0xFFCECECE), fontSize: sp(15)),
+                              hintText: "更新位置信息可以更准确的描述自己～"),
+                          onTap: () {
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
+                            _clickLocationSelect();
+                          },
+                          controller: _locationController,
+                          maxLines: 2,
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+            onTap: () {
+              _clickLocationSelect();
+            },
+          ),
+          InkWell(
+            child: Container(
+                color: Colors.white,
+                height: adapt(78),
+                margin: EdgeInsets.only(bottom: adapt(10)),
+                padding: EdgeInsets.only(left: adapt(15), top: adapt(15)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Text(
                         "简介",
                         style: TextStyle(
                             fontSize: sp(15), color: Color(0xFF222222)),
@@ -379,11 +428,22 @@ class _EditMinePageState extends BaseState<EditMinePage> {
         });
   }
 
+  /// 位置信息
+  _clickLocationSelect() {
+    AppController.withParam(
+            context, AppRoutes.ROUTE_SETTING_MINE_DESC, params: {"userDesc" : _descController.text})
+        .then((value) {
+      setState(() {
+        _descController.text = value;
+      });
+    });
+  }
+
   /// 简介
   _clickProfileSelect() {
     String uriEncode = Uri.encodeComponent(_descController.text ?? "");
-    AppController.navigateTo(
-            context, AppRoutes.ROUTE_SETTING_MINE_DESC + "?userDesc=$uriEncode");
+    // AppController.navigateTo(
+    //         context, AppRoutes.ROUTE_SETTING_MINE_DESC + "?userDesc=$uriEncode");
     AppController.withParam(
             context, AppRoutes.ROUTE_SETTING_MINE_DESC, params: {"userDesc" : _descController.text})
         .then((value) {
@@ -406,7 +466,7 @@ class _EditMinePageState extends BaseState<EditMinePage> {
         hobbies.removeWhere((element) {
           return TextUtil.isEmpty(element);
         });
-        userHobbies = StringUtils.join(hobbies, ",");
+        userHobbies = StringUtils.join(hobbies, " ");
       }
       setState(() {
         _hobbyController.text = userHobbies;
@@ -435,7 +495,7 @@ class _EditMinePageState extends BaseState<EditMinePage> {
       updateUser.userWx = contact;
     }
     updateUser.userDesc = _descController.text;
-    updateUser.userHobbies = _hobbyController.text;
+    updateUser.userHobbies = _hobbyController.text.replaceAll(" ", ",");
 
     Map<String, dynamic> param = updateUser.toJson();
     ResultData resultData = await AppApi.getInstance().updateUser(context, true, param);

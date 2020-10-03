@@ -92,63 +92,69 @@ class _MinePageState extends State<MinePage> {
                 snap: false,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
-                  background: Stack(
-                    children: [
-                      ConstrainedBox(
-                        constraints: BoxConstraints.expand(),
-                        child: Image.asset(
-                          "assets/images/ic_mine_header_bg.png",
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Container(
-                          margin: EdgeInsets.only(top: 50 + 56.0, left: 50),
-                          child: Row(
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(right: 20),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _choosePhoto(context);
-                                  },
-                                  child:ClipOval(
-                                    child: FadeInImage.assetNetwork(
-                                      placeholder: DevConstant.CONST_PLACEHOLDER,
-                                      fit: BoxFit.cover,
-                                      image: context.watch<UserProvider>().userPhoto,
-                                      //image: Provider.of<UserProvider>(context).userPhoto,
-                                      width: 80,
-                                      height: 80,
-                                    ),
-                                  )
-                                ),
-                              ),
-                              Container(
-                                height: 80,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 20),
-                                    ),
-                                    Text(
-                                      context.watch<UserProvider>().userName,
-                                      style: TextStyle(fontSize: 20),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 10),
-                                    ),
-                                    Text(context.watch<UserProvider>().userDesc),
-                                  ],
-                                ),
-                              )
-                            ],
+                  background: GestureDetector(
+                    onTap: () {
+                      /// 个人信息
+                      AppController.navigateTo(context, AppRoutes.ROUTE_SETTING_MINE);
+                    },
+                    child: Stack(
+                      children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints.expand(),
+                          child: Image.asset(
+                            "assets/images/ic_mine_header_bg.png",
+                            fit: BoxFit.cover,
                           ),
                         ),
-                      )
-                    ],
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Container(
+                            margin: EdgeInsets.only(top: 50 + 56.0, left: 50),
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(right: 20),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      _choosePhoto(context);
+                                    },
+                                    child:ClipOval(
+                                      child: FadeInImage.assetNetwork(
+                                        placeholder: DevConstant.CONST_PLACEHOLDER,
+                                        fit: BoxFit.cover,
+                                        image: context.watch<UserProvider>().userPhoto,
+                                        //image: Provider.of<UserProvider>(context).userPhoto,
+                                        width: 80,
+                                        height: 80,
+                                      ),
+                                    )
+                                  ),
+                                ),
+                                Container(
+                                  height: 80,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 20),
+                                      ),
+                                      Text(
+                                        context.watch<UserProvider>().userName,
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 10),
+                                      ),
+                                      Text(context.watch<UserProvider>().userDesc),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 leading: Icon(
