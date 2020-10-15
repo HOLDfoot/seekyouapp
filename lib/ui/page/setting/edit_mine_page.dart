@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:city_pickers/city_pickers.dart';
+import 'package:city_pickers/modal/result.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -14,6 +16,7 @@ import 'package:seekyouapp/ui/base/base_state_widget.dart';
 import 'package:seekyouapp/ui/dialog/dialog_choose_gender.dart';
 import 'package:seekyouapp/ui/widget/method_util.dart';
 import 'package:seekyouapp/util/StringUtils.dart';
+import 'package:seekyouapp/util/log.dart';
 import 'package:seekyouapp/util/regExp_util.dart';
 import 'package:seekyouapp/util/toast_util.dart';
 import 'package:seekyouapp/util_set.dart';
@@ -60,7 +63,7 @@ class _EditMinePageState extends BaseState<EditMinePage> {
         : _user.userGender == "f" ? "女" : "男";
     _descController.text = _user.userDesc;
     _contactController.text = TextUtil.isEmpty(_user.userWx) ? _user.userQq : _user.userWx;
-    _hobbyController.text = _user.userHobbies.replaceAll(",", " ");
+    _hobbyController.text = _user.userHobbies?.replaceAll(",", " ");
   }
 
   @override
@@ -429,14 +432,14 @@ class _EditMinePageState extends BaseState<EditMinePage> {
   }
 
   /// 位置信息
-  _clickLocationSelect() {
-    AppController.withParam(
-            context, AppRoutes.ROUTE_SETTING_MINE_DESC, params: {"userDesc" : _descController.text})
-        .then((value) {
+  _clickLocationSelect() async {
+    Result cityResult = await CityPickers.showCityPicker(context: context);
+    print("cityResult: ${cityResult.toString()}");
+    if (cityResult != null) {
       setState(() {
-        _descController.text = value;
+        _locationController.text = cityResult.cityName + ":" + cityResult.areaName;
       });
-    });
+    }
   }
 
   /// 简介
@@ -495,7 +498,12 @@ class _EditMinePageState extends BaseState<EditMinePage> {
       updateUser.userWx = contact;
     }
     updateUser.userDesc = _descController.text;
-    updateUser.userHobbies = _hobbyController.text.replaceAll(" ", ",");
+    String hobbyText = _hobbyController.text;
+    if (hobbyText != null) {
+      updateUser.userHobbies = hobbyText.replaceAll(" ", ",");
+    } else {
+      updateUser.userHobbies = "";
+    }
 
     Map<String, dynamic> param = updateUser.toJson();
     ResultData resultData = await AppApi.getInstance().updateUser(context, true, param);
