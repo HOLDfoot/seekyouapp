@@ -25,7 +25,7 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (photo == null) return;
     _userPhoto = photo;
     notifyListeners();
-    print("updatePhoto");
+    print("updatePhoto photo: $photo");
   }
   
   void updateUser(User user) {

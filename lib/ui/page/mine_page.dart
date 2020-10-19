@@ -123,7 +123,7 @@ class _MinePageState extends State<MinePage> {
                                         placeholder: DevConstant.CONST_PLACEHOLDER,
                                         fit: BoxFit.cover,
                                         image: context.watch<UserProvider>().userPhoto,
-                                        //image: Provider.of<UserProvider>(context).userPhoto,
+                                        //image: DevConstant.CONST_PIC_GIRL,
                                         width: 80,
                                         height: 80,
                                       ),
