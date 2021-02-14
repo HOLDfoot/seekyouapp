@@ -1,9 +1,9 @@
 import 'package:fluro/fluro.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:seekyouapp/util/logger.dart';
 
 class AppController {
-  static Router _router;
+  static FluroRouter _router;
 
   static set router(router) => _router = router;
 

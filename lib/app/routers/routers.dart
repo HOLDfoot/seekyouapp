@@ -42,7 +42,7 @@ class AppRoutes {
   static const String ROUTE_SETTING_AUTHOR = "/setting/author";
   static const String ROUTE_USER_VERTICAL = "/user/vertical";
 
-  static void configureRoutes(Router router) {
+  static void configureRoutes(FluroRouter router) {
     router.notFoundHandler = widgetNotFoundHandler;
 
     router.define(ROUTE_ERROR_404, handler: widgetNotFoundHandler);

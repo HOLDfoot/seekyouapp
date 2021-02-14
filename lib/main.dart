@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
 
   MyApp(): super() {
     InitManager.getInstance().init();
-    final router = new Router();
+    final router = new FluroRouter();
     AppRoutes.configureRoutes(router);
     AppController.router = router;
   }
