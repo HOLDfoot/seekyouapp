@@ -224,8 +224,10 @@ class _MinePageState extends State<MinePage> {
   _choosePhoto(BuildContext context) async {
     final _picker = ImagePicker();
     final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-    final File file = File(pickedFile.path);
-    _compressImage(file);
+    if (pickedFile != null) {
+      final File file = File(pickedFile.path);
+      _compressImage(file);
+    }
   }
 
   _compressImage(File imageFile) async {
