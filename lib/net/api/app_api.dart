@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:seekyouapp/data/manager/user.dart';
+import 'package:seekyouapp/net/model/user_list_data.dart';
 import 'package:seekyouapp/net/service/net_service.dart';
 import 'package:seekyouapp/net/widget/dialog_param.dart';
 import 'package:seekyouapp/net/widget/loading_dialog.dart';
@@ -19,6 +20,7 @@ class AppApi extends AppNetService {
   static const String _GET_USER_MINE = "/get_user_mine";
   static const String _UPLOAD_USER_ICON = "/upload_photo";
   static const String _UPDATE_USER = "/update_user";
+  static const String _GET_USER_ALL = "/get_user_all";
 
   AppApi._();
 
@@ -94,5 +96,19 @@ class AppApi extends AppNetService {
         params: param, context: context, showLoad: showProgress);
     resultData.toast();
     return resultData;
+  }
+
+  /// 获取所有用户的信息
+  Future<List<User>> getUserAll(BuildContext context, int pageNum, {int pageSize = 20}) async {
+    Map<String, dynamic> param = {
+      "pageNum": pageNum,
+      "pageIndex": pageSize,
+    };
+    ResultData resultData = await get(_GET_USER_ALL, params: param);
+    List<User> userList;
+    if (!resultData.isFail()) {
+      userList = UserListData.fromJson(resultData.data).modelList;
+    }
+    return userList;
   }
 }

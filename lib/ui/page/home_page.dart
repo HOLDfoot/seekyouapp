@@ -9,6 +9,7 @@ import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
 import 'package:seekyouapp/app/routers/navigate.dart';
 import 'package:seekyouapp/app/routers/routers.dart';
 import 'package:seekyouapp/data/manager/user.dart';
+import 'package:seekyouapp/net/api/app_api.dart';
 import 'package:seekyouapp/ui/common/error_page.dart';
 import 'package:seekyouapp/ui/constant/dev_constant.dart';
 
@@ -69,33 +70,33 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  /// 后端默认10
-  int pageSize = 10;
+  /// 后端默认20
+  int pageSize = 20;
 
   /// getData负责+1
-  int page = 0;
+  int pageNum = 1; // 从1开始
 
   /// 默认没有更多, 只有当刷新成功了才有更多
   bool noMore = true;
 
   /// 网络失败则返回null, 成功则有数据
   Future<List<User>> getData() async {
-    User item = User(userName: "小明", userPhoto: DevConstant.CONST_PIC, userAge: 21, userDesc: "I am waiting");
+    /*User item = User(userName: "小明", userPhoto: DevConstant.CONST_PIC, userAge: 21, userDesc: "I am waiting");
     List<User> userInfoList = [];
     for (int i = 0; i < pageSize; i++) {
       userInfoList.add(item);
     }
     print(DateTime.now());
     await Future.delayed(Duration(seconds: 3));
-    print(DateTime.now());
-    return userInfoList;
+    print(DateTime.now());*/
+
+    return await AppApi.getInstance().getUserAll(context, pageNum);
   }
 
   /// 刷新页面
   /// 处理了: 网络异常, 第一页的分页, 还有更多的情况, 第一次加载展示加载的UI
   Future<void> onRefresh() async {
-    // 恢复初始值
-    page = 1;
+    pageNum = 1;
     List<User> orderData = await getData();
     // 只要网络请求回来, 就已经完成了第一次加载
     if (showedLoading) {
@@ -115,17 +116,17 @@ class HomePageState extends State<HomePage> {
   /// 加载更多
   /// 处理了: 没有更多的情况, 网络失败的情况, 分页的情况
   Future<void> onLoad() async {
-    page++;
+    pageNum++;
     List<User> orderData = await getData();
     if (mounted) {
       setState(() {
         if (orderData == null) {
           /// 网络失败
-          page--;
+          pageNum--;
         } else if (orderData.length == 0) {
           noMore = true;
           userList.addAll(orderData);
-          page--;
+          pageNum--;
         } else {
           noMore = false;
           userList.addAll(orderData);
@@ -184,14 +185,8 @@ class HomePageState extends State<HomePage> {
               child: CircularProgressIndicator(),
             ),
           ),
-          errorWidget: (context, url, error) => Icon(Icons.error),
+          errorWidget: (context, url, error) => Image.asset(DevConstant.CONST_PIC),
         ),
-        /* child: Image.network(
-          userList[index].photo,
-          fit: BoxFit.cover,
-          colorBlendMode: BlendMode.colorBurn,
-          color: Colors.white10,
-        ),*/
       ),
     );
   }

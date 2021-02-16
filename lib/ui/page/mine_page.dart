@@ -157,10 +157,6 @@ class _MinePageState extends State<MinePage> {
                     ),
                   ),
                 ),
-                leading: Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
-                ),
                 title: InkWell(
                   child: Text(
                     _showAppBarTitle ? "新世界" : "",
