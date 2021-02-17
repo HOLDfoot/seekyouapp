@@ -9,6 +9,7 @@ import 'package:seekyouapp/net/model/user_list_data.dart';
 import 'package:seekyouapp/net/service/net_service.dart';
 import 'package:seekyouapp/net/widget/dialog_param.dart';
 import 'package:seekyouapp/net/widget/loading_dialog.dart';
+import 'package:seekyouapp/util/toast_util.dart';
 
 import 'app_net_service.dart';
 
@@ -36,7 +37,9 @@ class AppApi extends AppNetService {
   Future<User> getUserMine(BuildContext context) async {
     ResultData resultData = await get(_GET_USER_MINE);
     User user;
-    if (!resultData.isFail()) {
+    if (resultData.isFail()) {
+      Fluttertoast.showToast(msg: resultData.msg);
+    } else {
       user = User.fromJson(resultData.data);
     }
     return user;

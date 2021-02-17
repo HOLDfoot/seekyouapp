@@ -4,12 +4,15 @@ import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:seekyouapp/app/provider/UserProvider.dart';
+import 'package:seekyouapp/app/routers/navigate.dart';
+import 'package:seekyouapp/app/routers/routers.dart';
 import 'package:seekyouapp/data/constant/sp_constant.dart';
 import 'package:seekyouapp/data/manager/user.dart';
 import 'package:seekyouapp/data/manager/cache_manager.dart';
 import 'package:seekyouapp/net/api/app_api.dart';
 import 'package:seekyouapp/util/logger.dart';
 import 'package:seekyouapp/util/sp_util.dart';
+import 'package:seekyouapp/util/toast_util.dart';
 
 class AccountManager {
   static AccountManager _instance;
@@ -29,6 +32,9 @@ class AccountManager {
     User user = await AppApi.getInstance().getUserMine(context);
     if (user != null) {
       cacheUser(user);
+    } else {
+     logOut(notifyServer: false);
+     AppController.navigateTo(context, AppRoutes.ROUTE_USER_SIGN);
     }
   }
 

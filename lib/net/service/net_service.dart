@@ -153,7 +153,7 @@ class NetService {
         resultData = ResultData(errorMsg, false, url: url);
       } else {
         try {
-          resultData = ResultData.response(data);
+          resultData = ResultData.response(data, url: url);
         } catch (exception) {
           resultData = ResultData(exception.toString(), true, url: url);
         }

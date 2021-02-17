@@ -8,6 +8,7 @@ import 'package:flutter_easyrefresh/ball_pulse_header.dart';
 import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
 import 'package:seekyouapp/app/routers/navigate.dart';
 import 'package:seekyouapp/app/routers/routers.dart';
+import 'package:seekyouapp/data/manager/InitManager.dart';
 import 'package:seekyouapp/data/manager/user.dart';
 import 'package:seekyouapp/net/api/app_api.dart';
 import 'package:seekyouapp/ui/common/error_page.dart';
@@ -24,6 +25,11 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   List<User> userList;
 
+  @override
+  void initState() {
+    super.initState();
+    InitManager.getInstance().initContext(context);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
