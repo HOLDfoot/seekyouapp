@@ -142,7 +142,6 @@ class PageViewItemState extends BaseState<PageViewItem> {
     "爱好看电视"
   ];
 
-
   Widget getPageViewItemWidget(BuildContext context, int index) {
     if (index == 0) {
       // 用户的个人信息和❤️按钮
@@ -152,17 +151,38 @@ class PageViewItemState extends BaseState<PageViewItem> {
         child: Align(
           alignment: Alignment.bottomCenter,
           child: Container(
-            margin: EdgeInsets.all(10),
+            //color: Colors.black26,
+            padding: EdgeInsets.all(10),
             width: double.infinity,
-            child: Wrap(
-              direction: Axis.horizontal,
-              spacing: 5,
-              runAlignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              verticalDirection: VerticalDirection.down,
-              clipBehavior: Clip.hardEdge,
-              children: <Widget>[for (String item in tags) TagItem(item)],
-            ),
+            height: 300,
+            child: Stack(children: [
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Wrap(
+                  direction: Axis.horizontal,
+                  spacing: 5,
+                  runSpacing: 5,
+                  runAlignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  verticalDirection: VerticalDirection.down,
+                  clipBehavior: Clip.hardEdge,
+                  children: <Widget>[for (String item in tags) TagItem(item)],
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 230),
+                  child: Image.asset(
+                    //'assets/images/icon_favourite_normal.png',
+                    'assets/images/icon_favourite_checked.png',
+                    width: adapt(50),
+                    height: adapt(50),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ]),
           ),
         ),
       );
@@ -191,13 +211,15 @@ class PageViewItemState extends BaseState<PageViewItem> {
                       child: Text("你: "),
                     ),
                     Container(
-                      child: Text(" 会员名：xxx性别：x年龄：xx岁（xx-xx-xx） 身高：xxx厘米 体重：xx公斤 学历：xx 职业：xx 收入：xxxx/元/月 征婚状态：征婚进行中 婚史：xx 所在地区：xx 征婚会员详细资料 民族：xx 血型：xx 星座：xx 属相：xx 外貌：xx 体型：xx 性格：xx 信仰：xx 单位：xx 结婚形式：xx住房：xx 是否有车：xx 职业类型：xx心目中的你： 年龄：x岁 - xx岁 身高：xxx厘米 - xxx厘米 学历：xx 收入：xxxx/元/月 婚史：xx 征婚范围：xx 最佳职业：xx电话：*** QQ：*** 手机：*** email：*** 邮局寄信地址： *** 邮政编码：*** 邮寄地址：*** 收信人 ：***。"),
+                      child: Text(
+                          " 会员名：xxx性别：x年龄：xx岁（xx-xx-xx） 身高：xxx厘米 体重：xx公斤 学历：xx 职业：xx 收入：xxxx/元/月 征婚状态：征婚进行中 婚史：xx 所在地区：xx 征婚会员详细资料 民族：xx 血型：xx 星座：xx 属相：xx 外貌：xx 体型：xx 性格：xx 信仰：xx 单位：xx 结婚形式：xx住房：xx 是否有车：xx 职业类型：xx心目中的你： 年龄：x岁 - xx岁 身高：xxx厘米 - xxx厘米 学历：xx 收入：xxxx/元/月 婚史：xx 征婚范围：xx 最佳职业：xx电话：*** QQ：*** 手机：*** email：*** 邮局寄信地址： *** 邮政编码：*** 邮寄地址：*** 收信人 ：***。"),
                     ),
                     Container(
                       child: Text("我: "),
                     ),
                     Container(
-                      child: Text(" 会员名：xxx性别：x年龄：xx岁（xx-xx-xx） 身高：xxx厘米 体重：xx公斤 学历：xx 职业：xx 收入：xxxx/元/月 征婚状态：征婚进行中 婚史：xx 所在地区：xx 征婚会员详细资料 民族：xx 血型：xx 星座：xx 属相：xx 外貌：xx 体型：xx 性格：xx 信仰：xx 单位：xx 结婚形式：xx住房：xx 是否有车：xx 职业类型：xx心目中的你： 年龄：x岁 - xx岁 身高：xxx厘米 - xxx厘米 学历：xx 收入：xxxx/元/月 婚史：xx 征婚范围：xx 最佳职业：xx电话：*** QQ：*** 手机：*** email：*** 邮局寄信地址： *** 邮政编码：*** 邮寄地址：*** 收信人 ：***。"),
+                      child: Text(
+                          " 会员名：xxx性别：x年龄：xx岁（xx-xx-xx） 身高：xxx厘米 体重：xx公斤 学历：xx 职业：xx 收入：xxxx/元/月 征婚状态：征婚进行中 婚史：xx 所在地区：xx 征婚会员详细资料 民族：xx 血型：xx 星座：xx 属相：xx 外貌：xx 体型：xx 性格：xx 信仰：xx 单位：xx 结婚形式：xx住房：xx 是否有车：xx 职业类型：xx心目中的你： 年龄：x岁 - xx岁 身高：xxx厘米 - xxx厘米 学历：xx 收入：xxxx/元/月 婚史：xx 征婚范围：xx 最佳职业：xx电话：*** QQ：*** 手机：*** email：*** 邮局寄信地址： *** 邮政编码：*** 邮寄地址：*** 收信人 ：***。"),
                     ),
                   ],
                 ),
@@ -219,14 +241,12 @@ class TagItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       decoration: BoxDecoration(
           border: Border.all(color: Colors.blueAccent, width: 1),
-          borderRadius: BorderRadius.all(Radius.circular(5))),
+          borderRadius: BorderRadius.all(Radius.circular(3))),
       child: Container(
-        padding: text.contains("Giao") ? EdgeInsets.all(10) : EdgeInsets.all(3),
-        margin: EdgeInsets.all(8),
+        padding: EdgeInsets.all(3),
         child: Text(text),
       ),
     );
