@@ -504,6 +504,7 @@ class _EditMinePageState extends BaseState<EditMinePage> {
     } else {
       updateUser.userHobbies = "";
     }
+    updateUser.userArea = _locationController.text;
 
     Map<String, dynamic> param = updateUser.toJson();
     ResultData resultData = await AppApi.getInstance().updateUser(context, true, param);

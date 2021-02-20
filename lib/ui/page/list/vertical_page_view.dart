@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:seekyouapp/data/manager/user.dart';
@@ -9,6 +10,7 @@ import 'package:seekyouapp/platform/wrapper/system_service.dart';
 import 'package:seekyouapp/ui/base/base_state_widget.dart';
 import 'package:seekyouapp/ui/constant/product_constant.dart';
 import 'package:seekyouapp/ui/widget/method_util.dart';
+import 'package:seekyouapp/util/StringUtils.dart';
 import 'package:seekyouapp/util/toast_util.dart';
 import 'package:seekyouapp/util_set.dart';
 
@@ -93,6 +95,44 @@ class PageViewItemState extends BaseState<PageViewItem> {
   @override
   void initState() {
     super.initState();
+    initTags();
+    requestUserDetail();
+  }
+
+  /// 请求用户详细信息
+  void requestUserDetail() async {
+    // 当前用户是否喜欢它
+    // 明确的个人信息
+  }
+
+  /// 双击事件, 通知服务器, 喜欢当前的用户, 并且让like图标显示
+  void onDoubleTap() {
+
+    // 成功发送到服务器
+    if (true) {
+      likeTheUser = true;
+    }
+  }
+
+  /// 长按事件, 显示举报/不喜欢对话框
+  void onLongPress() {
+
+  }
+
+  void initTags() {
+    tags = [];
+    if (TextUtil.isEmpty(user.userGender)) {
+      tags.add(user.userGender == "m" ? "男" : "女");
+    }
+    if (user.userAge != 0) {
+      tags.add(user.userAge.toString());
+    }
+    if (TextUtil.isEmpty(user.userArea)) {
+      tags.add(user.userArea);
+    }
+    if (TextUtil.isEmpty(user.userHobbies)) {
+      tags.addAll(user.userHobbies.split(","));
+    }
   }
 
   @override
@@ -130,6 +170,7 @@ class PageViewItemState extends BaseState<PageViewItem> {
     );
   }
 
+  bool likeTheUser = false;
   List<String> tags = [
     "男",
     "郑州",
@@ -145,44 +186,61 @@ class PageViewItemState extends BaseState<PageViewItem> {
   Widget getPageViewItemWidget(BuildContext context, int index) {
     if (index == 0) {
       // 用户的个人信息和❤️按钮
-      return Container(
-        width: double.infinity,
-        height: double.infinity,
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            //color: Colors.black26,
-            padding: EdgeInsets.all(10),
-            width: double.infinity,
-            height: 300,
-            child: Stack(children: [
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Wrap(
-                  direction: Axis.horizontal,
-                  spacing: 5,
-                  runSpacing: 5,
-                  runAlignment: WrapAlignment.center,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  verticalDirection: VerticalDirection.down,
-                  clipBehavior: Clip.hardEdge,
-                  children: <Widget>[for (String item in tags) TagItem(item)],
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 230),
-                  child: Image.asset(
-                    //'assets/images/icon_favourite_normal.png',
-                    'assets/images/icon_favourite_checked.png',
-                    width: adapt(50),
-                    height: adapt(50),
-                    fit: BoxFit.contain,
+      return GestureDetector(
+        onDoubleTap: onDoubleTap,
+        onLongPress: onLongPress,
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              //color: Colors.black26,
+              padding: EdgeInsets.all(10),
+              width: double.infinity,
+              height: 300,
+              child: Stack(children: [
+                Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Container(
+                      height: 40,
+                      alignment: Alignment.centerLeft,
+                      child: Text("user.\nuserDesc??" "", textAlign: TextAlign.left, overflow: TextOverflow.ellipsis,),
+                      //child: Text(user.userDesc??""),
+                    )),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 40),
+                    child: Wrap(
+                      direction: Axis.horizontal,
+                      spacing: 5,
+                      runSpacing: 5,
+                      runAlignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      verticalDirection: VerticalDirection.down,
+                      clipBehavior: Clip.hardEdge,
+                      children: <Widget>[for (String item in tags) TagItem(item)],
+                    ),
                   ),
                 ),
-              ),
-            ]),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Offstage(
+                    offstage: !likeTheUser,
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 230),
+                      child: Image.asset(
+                        'assets/images/icon_favourite_checked.png',
+                        width: adapt(50),
+                        height: adapt(50),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+              ]),
+            ),
           ),
         ),
       );

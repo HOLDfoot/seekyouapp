@@ -15,7 +15,9 @@ class User {
     String userToken;
     String userWx;
 
-    User({this.userAge, this.userDesc, this.userEmail, this.userGender, this.userHobbies, this.userId, this.userName, this.userPassword, this.userPhoto, this.userQq, this.userToken, this.userWx});
+    String userArea;
+
+    User({this.userAge, this.userDesc, this.userEmail, this.userGender, this.userHobbies, this.userId, this.userName, this.userPassword, this.userPhoto, this.userQq, this.userToken, this.userWx, this.userArea});
 
     factory User.fromJson(Map<String, dynamic> json) {
         return User(
@@ -31,6 +33,7 @@ class User {
             userQq: json['userQq'], 
             userToken: json['userToken'], 
             userWx: json['userWx'], 
+            userArea: json['userArea'],
         );
     }
 
@@ -48,6 +51,7 @@ class User {
         data['userQq'] = this.userQq;
         data['userToken'] = this.userToken;
         data['userWx'] = this.userWx;
+        data['userArea'] = this.userArea;
         return data;
     }
 }
