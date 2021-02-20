@@ -64,6 +64,7 @@ class _EditMinePageState extends BaseState<EditMinePage> {
     _descController.text = _user.userDesc;
     _contactController.text = TextUtil.isEmpty(_user.userWx) ? _user.userQq : _user.userWx;
     _hobbyController.text = _user.userHobbies?.replaceAll(",", " ");
+    _locationController.text = _user.userArea??"";
   }
 
   @override
