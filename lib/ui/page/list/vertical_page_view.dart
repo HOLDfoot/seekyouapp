@@ -127,10 +127,10 @@ class PageViewItemState extends BaseState<PageViewItem> {
     if (user.userAge != 0) {
       tags.add(user.userAge.toString());
     }
-    if (TextUtil.isEmpty(user.userArea)) {
+    if (!TextUtil.isEmpty(user.userArea)) {
       tags.add(user.userArea);
     }
-    if (TextUtil.isEmpty(user.userHobbies)) {
+    if (!TextUtil.isEmpty(user.userHobbies)) {
       tags.addAll(user.userHobbies.split(","));
     }
   }
