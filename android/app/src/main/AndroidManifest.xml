@@ -10,7 +10,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="seekyouapp"
+        android:label="遇见"
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/LaunchTheme"
         android:usesCleartextTraffic="true"
