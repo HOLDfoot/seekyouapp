@@ -185,6 +185,9 @@ class _MinePageState extends State<MinePage> {
                 }),
                 getLineWidget(title: "关注我的人", icon: Icons.person_add),
                 getLineWidget(title: "喜欢的文章", icon: Icons.art_track),
+                getLineWidget(title: "我的意向", icon: Icons.edit_outlined, callback: () {
+                  AppController.navigateTo(context, AppRoutes.ROUTE_MINE_INTENT);
+                }),
               ],
             ),
           )),

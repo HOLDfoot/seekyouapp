@@ -4,6 +4,7 @@ import 'package:seekyouapp/app/routers/router_handler.dart';
 import 'package:seekyouapp/main.dart';
 import 'package:seekyouapp/ui/page/list/vertical_page_view.dart';
 import 'package:seekyouapp/ui/page/login_page.dart';
+import 'package:seekyouapp/ui/page/mine_intent_page.dart';
 import 'package:seekyouapp/ui/page/setting/contact_author.dart';
 import 'package:seekyouapp/ui/page/setting/edit_hobby_page.dart';
 import 'package:seekyouapp/ui/page/setting/edit_intro_page.dart';
@@ -42,6 +43,8 @@ class AppRoutes {
   static const String ROUTE_SETTING_AUTHOR = "/setting/author";
   static const String ROUTE_USER_VERTICAL = "/user/vertical";
 
+  static const String ROUTE_MINE_INTENT = "/mine/intent";
+
   static void configureRoutes(FluroRouter router) {
     router.notFoundHandler = widgetNotFoundHandler;
 
@@ -55,6 +58,9 @@ class AppRoutes {
 
     router.define(ROUTE_SETTING, handler: createHandler(new SettingPage()));
     router.define(ROUTE_SETTING_MINE, handler: createHandler(new EditMinePage()));
+    router.define(ROUTE_MINE_INTENT, handler: createHandler(new MineIntentPage()));
+
+
     router.define(ROUTE_SETTING_MINE_DESC, handler: createParamHandler((_) {
       return EditIntroPage(pageParam: _);
     }));
