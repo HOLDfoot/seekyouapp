@@ -15,25 +15,16 @@ class MineIntentPage extends BaseStatefulPage {
 }
 
 class MineIntentPageState extends BaseState<MineIntentPage> {
-  final TextEditingController _moodController =
+  final TextEditingController _mineIntentController =
   new TextEditingController(text: "");
 
-  String _desc;
   int _characterLength = 0;
+  static const maxWords = 500;
 
-  void _moodListener() {
-    logger.d("_moodListener");
-    if (_moodController.text != null && _moodController.text.length > 20) {
-      Fluttertoast.showToast(msg: "保留点神秘感，最多200个字哦");
-      _moodController.text = _desc;
-      return;
-    }
-    _desc = _moodController.text;
+  void textChangeListener() {
     setState(() {
-      if (_desc != null) {
-        setState(() {
-          _characterLength = _desc.length;
-        });
+      if (_mineIntentController.text != null) {
+        _characterLength = _mineIntentController.text.length;
       }
     });
   }
@@ -41,21 +32,20 @@ class MineIntentPageState extends BaseState<MineIntentPage> {
   @override
   void initState() {
     super.initState();
-    _desc = widget.pageParam["userDesc"][0];
 
-    _moodController.text = _desc;
-    _moodController.addListener(_moodListener);
+    _mineIntentController.addListener(textChangeListener);
   }
 
   @override
   void dispose() {
     super.dispose();
-    _moodController.removeListener(_moodListener);
+    _mineIntentController.removeListener(textChangeListener);
   }
 
-  _complete(String desc) {
+  /// 把编辑结果发送到服务器
+  _complete() {
     FocusScope.of(context).requestFocus(FocusNode());
-    Navigator.pop(context, desc);
+
   }
 
   @override
@@ -66,14 +56,14 @@ class MineIntentPageState extends BaseState<MineIntentPage> {
   _scaffold() {
     return new Scaffold(
         backgroundColor: Color(0xFFF3F5F9),
-        appBar: backActionAppbar(context, "简介", _action(), backFunc: () {
-          _complete(_desc);
+        appBar: backActionAppbar(context, "我和我的意向", _action(), backFunc: () {
+          _complete();
         }),
         body: WillPopScope(
             child: Container(
               child: Container(
                 margin: EdgeInsets.only(top: adapt(1)),
-                height: adapt(179),
+                height: adapt(500),
                 color: Colors.white,
                 child: Stack(
                   children: <Widget>[
@@ -82,15 +72,15 @@ class MineIntentPageState extends BaseState<MineIntentPage> {
                           left: adapt(15), right: adapt(15), bottom: adapt(10)),
                       child: TextField(
                         keyboardType: TextInputType.text,
-                        maxLength: 20,
-                        maxLines: 7,
+                        maxLength: maxWords,
+                        maxLines: 100,
                         style:
                         TextStyle(color: Color(0xff222222), fontSize: 15),
                         decoration: new InputDecoration(
                             border: InputBorder.none,
-                            hintText: "简单的介绍一下自己吧～",
+                            hintText: "简单的介绍一下自己和自己的意向吧～",
                             hintStyle: TextStyle(color: Color(0xFF999999))),
-                        controller: _moodController,
+                        controller: _mineIntentController,
                       ),
                     ),
                   ],
@@ -98,7 +88,7 @@ class MineIntentPageState extends BaseState<MineIntentPage> {
               ),
             ),
             onWillPop: () {
-              _complete(_desc);
+              _complete();
               return Future.value(true);
             }));
   }
@@ -122,7 +112,7 @@ class MineIntentPageState extends BaseState<MineIntentPage> {
         onPressed: _characterLength < 1
             ? null
             : () {
-          _complete(_desc);
+          _complete();
         },
         shape: new RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(adapt(5))),
