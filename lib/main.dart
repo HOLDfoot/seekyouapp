@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
 
     return OKToast(
         child: MaterialApp(
-          title: 'Flutter Demo',
+          title: '遇见',
           theme: ThemeData(
             // This is the theme of your application.
             //

@@ -33,7 +33,7 @@ class MineIntentPageState extends BaseState<MineIntentPage> {
   @override
   void initState() {
     super.initState();
-
+    getMineUserIntent();
     _mineIntentController.addListener(textChangeListener);
   }
 
@@ -43,8 +43,19 @@ class MineIntentPageState extends BaseState<MineIntentPage> {
     _mineIntentController.removeListener(textChangeListener);
   }
 
+
+  /// 从服务器请求当前用户的userIntent信息
+  void getMineUserIntent() async {
+    ResultData resultData = await AppApi.getInstance().getMineIntent(context, true);
+    if (resultData.isSuccess()) {
+      setState(() {
+        _mineIntentController.text = resultData.data["userIntent"];
+      });
+    }
+  }
+
   /// 把编辑结果发送到服务器
-  _complete() async {
+  void _complete() async {
     FocusScope.of(context).requestFocus(FocusNode());
     Map<String, String> param = {"userIntent" :  _mineIntentController.text};
     ResultData resultData = await AppApi.getInstance().updateMineIntent(context, true, param);
