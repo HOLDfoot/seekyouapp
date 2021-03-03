@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:seekyouapp/net/api/app_api.dart';
 import 'package:seekyouapp/ui/base/base_state_widget.dart';
 import 'package:seekyouapp/ui/widget/method_util.dart';
 import 'package:seekyouapp/util/toast_util.dart';
@@ -43,9 +44,13 @@ class MineIntentPageState extends BaseState<MineIntentPage> {
   }
 
   /// 把编辑结果发送到服务器
-  _complete() {
+  _complete() async {
     FocusScope.of(context).requestFocus(FocusNode());
-
+    Map<String, String> param = {"userIntent" :  _mineIntentController.text};
+    ResultData resultData = await AppApi.getInstance().updateMineIntent(context, true, param);
+    if (resultData.isSuccess()) {
+      Navigator.of(context).pop();
+    }
   }
 
   @override

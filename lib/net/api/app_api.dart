@@ -22,6 +22,7 @@ class AppApi extends AppNetService {
   static const String _UPLOAD_USER_ICON = "/upload_photo";
   static const String _UPDATE_USER = "/update_user";
   static const String _GET_USER_ALL = "/get_user_all";
+  static const String _UPDATE_MINE_INTENT = "/update_user_intent";
 
   AppApi._();
 
@@ -113,5 +114,13 @@ class AppApi extends AppNetService {
       userList = UserListData.fromJson(resultData.data).modelList;
     }
     return userList;
+  }
+
+  Future<ResultData> updateMineIntent(BuildContext context, bool showProgress,
+      Map<String, dynamic> param) async {
+    ResultData resultData = await post(_UPDATE_MINE_INTENT,
+        params: param, context: context, showLoad: showProgress);
+    resultData.toast();
+    return resultData;
   }
 }
