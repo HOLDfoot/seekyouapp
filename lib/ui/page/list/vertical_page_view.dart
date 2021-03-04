@@ -141,7 +141,7 @@ class PageViewItemState extends BaseState<PageViewItem> {
       SimpleDialogOption(
         child: Text('不喜欢, 不想再看到'),
         onPressed: () {
-          Navigator.of(context).pop(Option.dislikeUser);
+          Navigator.of(context).pop(Option.hateUser);
         },
       ),
       SimpleDialogOption(
@@ -162,9 +162,9 @@ class PageViewItemState extends BaseState<PageViewItem> {
       case Option.updateLikeUser:
         updateLikeUser(!likeTheUser);
         break;
-      case Option.dislikeUser:
+      case Option.hateUser:
         ResultData resultData = await AppApi.getInstance()
-            .dislikeUser(context, false, theUserId: user.userId);
+            .hateUser(context, false, theUserId: user.userId);
         // 成功发送到服务器
         if (resultData.isSuccess()) {
           Fluttertoast.showToast(msg: "你以后不会再看到它了~");
@@ -376,4 +376,4 @@ class TagItem extends StatelessWidget {
   }
 }
 
-enum Option { updateLikeUser, dislikeUser, reportUser }
+enum Option { updateLikeUser, hateUser, reportUser }

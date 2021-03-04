@@ -25,7 +25,7 @@ class AppApi extends AppNetService {
   static const String _UPDATE_MINE_INTENT = "/update_user_intent";
   static const String _GET_MINE_INTENT = "/get_user_intent";
   static const String _UPDATE_LIKE_USER = "/update_like_user";
-  static const String _UPDATE_DISLIKE_USER = "/update_dislike_user";
+  static const String _UPDATE_HATE_USER = "/update_hate_user";
   static const String _report_USER = "/report_user";
 
   AppApi._();
@@ -144,11 +144,11 @@ class AppApi extends AppNetService {
     return resultData;
   }
 
-  Future<ResultData> dislikeUser(BuildContext context, bool showProgress, {String theUserId}) async {
+  Future<ResultData> hateUser(BuildContext context, bool showProgress, {String theUserId}) async {
     Map<String, dynamic> param = {
       "theUserId": theUserId
     };
-    ResultData resultData = await post(_UPDATE_DISLIKE_USER,
+    ResultData resultData = await post(_UPDATE_HATE_USER,
         params: param, context: context, showLoad: showProgress);
     resultData.toast();
     return resultData;
