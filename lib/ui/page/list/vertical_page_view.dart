@@ -2,8 +2,11 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:seekyouapp/app/routers/navigate.dart';
+import 'package:seekyouapp/app/routers/routers.dart';
 import 'package:seekyouapp/data/manager/user.dart';
 import 'package:seekyouapp/data/manager/user_manager.dart';
 import 'package:seekyouapp/net/api/app_api.dart';
@@ -133,21 +136,36 @@ class PageViewItemState extends BaseState<PageViewItem> {
   Future showMoreOptions() async {
     List<Widget> children = [
       SimpleDialogOption(
-        child: Text(likeTheUser ? "取消喜欢" : "喜欢这个人"),
+        child: Center(child: Text(likeTheUser ? "取消喜欢" : "喜欢这个人")),
         onPressed: () {
           Navigator.of(context).pop(Option.updateLikeUser);
         },
       ),
       SimpleDialogOption(
-        child: Text('不喜欢, 不想再看到'),
+        child: Center(child: Text('不喜欢, 不想再看到')),
         onPressed: () {
           Navigator.of(context).pop(Option.hateUser);
         },
       ),
       SimpleDialogOption(
-        child: Text('举报当前用户违规'),
-        onPressed: () {
+        child: Center(child: Text('举报当前用户违规')),
+        onPressed: () async {
+          Map<String, dynamic> param = {
+            "title": "举报信息",
+            "hint": "填写举报信息",
+            "minLength": 10,
+            "maxLength": 100,
+          };
           Navigator.of(context).pop(Option.reportUser);
+          await AppController.withParam(context, AppRoutes.ROUTE_LONG_TEXT, params: param).then((value) async {
+            if (value != null) {
+              ResultData resultData = await AppApi.getInstance().reportUser(
+                  context, true, theUserId: user.userId, reportText: value);
+              if (resultData.isSuccess()) {
+                Fluttertoast.showToast(msg: "举报成功");
+              }
+            }
+          });
         },
       ),
     ];
@@ -155,7 +173,7 @@ class PageViewItemState extends BaseState<PageViewItem> {
     final option = await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return SimpleDialog(title: Text('更多选择'), children: children);
+          return SimpleDialog(title: Center(child: Text('更多选择')), children: children);
         });
 
     switch (option) {
@@ -251,6 +269,7 @@ class PageViewItemState extends BaseState<PageViewItem> {
         child: Container(
           width: double.infinity,
           height: double.infinity,
+          color: Colors.white.withAlpha(2),
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Container(

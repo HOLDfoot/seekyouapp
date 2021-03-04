@@ -9,6 +9,7 @@ import 'package:seekyouapp/ui/page/setting/contact_author.dart';
 import 'package:seekyouapp/ui/page/setting/edit_hobby_page.dart';
 import 'package:seekyouapp/ui/page/setting/edit_intro_page.dart';
 import 'package:seekyouapp/ui/page/setting/edit_mine_page.dart';
+import 'package:seekyouapp/ui/page/setting/long_text_page.dart';
 import 'package:seekyouapp/ui/page/setting_page.dart';
 
 /// 定义
@@ -41,9 +42,13 @@ class AppRoutes {
   static const String ROUTE_SETTING_MINE_DESC = "/setting/mine/desc";
   static const String ROUTE_SETTING_MINE_HOBBIES = "/setting/mine/hobbies";
   static const String ROUTE_SETTING_AUTHOR = "/setting/author";
+  static const String ROUTE_MINE_INTENT = "/setting/mine/intent";
+
+  /// 用户界面
   static const String ROUTE_USER_VERTICAL = "/user/vertical";
 
-  static const String ROUTE_MINE_INTENT = "/mine/intent";
+  /// 填写长文本的通用界面
+  static const String ROUTE_LONG_TEXT = "/common/longText";
 
   static void configureRoutes(FluroRouter router) {
     router.notFoundHandler = widgetNotFoundHandler;
@@ -70,6 +75,9 @@ class AppRoutes {
     router.define(ROUTE_SETTING_AUTHOR, handler: createHandler(new ContactAuthorPage()));
     router.define(ROUTE_USER_VERTICAL, handler: createParamHandler((_) {
       return VerticalViewPage(pageParam: _);
+    }));
+    router.define(ROUTE_LONG_TEXT, handler: createParamHandler((_) {
+      return LongTextPage(pageParam: _);
     }));
 
   }

@@ -30,7 +30,12 @@ class AppController {
     if (params != null) {
       int index = 0;
       for (var key in params.keys) {
-        var value = Uri.encodeComponent(params[key]);
+        var value;
+        if (params[key] is num) {
+          value = params[key];
+        } else {
+          value = Uri.encodeComponent(params[key]);
+        }
         if (index == 0) {
           query = "?";
         } else {

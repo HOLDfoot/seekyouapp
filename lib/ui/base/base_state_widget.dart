@@ -76,6 +76,14 @@ class BaseState<T extends BaseStatefulPage> extends State<T> {
     }
   }
 
+  dynamic getPageParamWithKey(String key, {dynamic defaultValue}) {
+    if (widget.pageParam[key] != null) {
+      return widget.pageParam[key][0];
+    } else {
+      return defaultValue;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
