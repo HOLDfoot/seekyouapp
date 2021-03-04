@@ -24,6 +24,9 @@ class AppApi extends AppNetService {
   static const String _GET_USER_ALL = "/get_user_all";
   static const String _UPDATE_MINE_INTENT = "/update_user_intent";
   static const String _GET_MINE_INTENT = "/get_user_intent";
+  static const String _UPDATE_LIKE_USER = "/update_like_user";
+  static const String _UPDATE_DISLIKE_USER = "/update_dislike_user";
+  static const String _report_USER = "/report_user";
 
   AppApi._();
 
@@ -127,6 +130,38 @@ class AppApi extends AppNetService {
 
   Future<ResultData> getMineIntent(BuildContext context, bool showProgress) async {
     ResultData resultData = await get(_GET_MINE_INTENT, context: context, showLoad: showProgress);
+    resultData.toast();
+    return resultData;
+  }
+
+  Future<ResultData> updateLikeUser(BuildContext context, bool showProgress, {bool likeUser, String theUserId}) async {
+    Map<String, dynamic> param = {
+      "likeUser": likeUser,
+    };
+    ResultData resultData = await post(_UPDATE_LIKE_USER,
+        params: param, context: context, showLoad: showProgress);
+    resultData.toast();
+    return resultData;
+  }
+
+  Future<ResultData> dislikeUser(BuildContext context, bool showProgress, {String theUserId}) async {
+    Map<String, dynamic> param = {
+      "theUserId": theUserId
+    };
+    ResultData resultData = await post(_UPDATE_DISLIKE_USER,
+        params: param, context: context, showLoad: showProgress);
+    resultData.toast();
+    return resultData;
+  }
+
+  /// 举报该用户
+  Future<ResultData> reportUser(BuildContext context, bool showProgress, {String theUserId, String reportText}) async {
+    Map<String, dynamic> param = {
+      "theUserId": theUserId,
+      "reportText": reportText
+    };
+    ResultData resultData = await post(_report_USER,
+        params: param, context: context, showLoad: showProgress);
     resultData.toast();
     return resultData;
   }

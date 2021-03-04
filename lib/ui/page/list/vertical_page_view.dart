@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:seekyouapp/data/manager/user.dart';
 import 'package:seekyouapp/data/manager/user_manager.dart';
+import 'package:seekyouapp/net/api/app_api.dart';
 import 'package:seekyouapp/platform/wrapper/system_service.dart';
 import 'package:seekyouapp/ui/base/base_state_widget.dart';
 import 'package:seekyouapp/ui/constant/product_constant.dart';
@@ -106,17 +107,75 @@ class PageViewItemState extends BaseState<PageViewItem> {
   }
 
   /// 双击事件, 通知服务器, 喜欢当前的用户, 并且让like图标显示
-  void onDoubleTap() {
+  void onDoubleTap() async {
+    if (!likeTheUser) {
+      updateLikeUser(true);
+    }
+  }
 
+  void updateLikeUser(bool likeUser) async {
+    ResultData resultData = await AppApi.getInstance().updateLikeUser(
+        context, false,
+        likeUser: likeTheUser, theUserId: user.userId);
     // 成功发送到服务器
-    if (true) {
-      likeTheUser = true;
+    if (resultData.isSuccess()) {
+      setState(() {
+        likeTheUser = likeUser;
+      });
     }
   }
 
   /// 长按事件, 显示举报/不喜欢对话框
-  void onLongPress() {
+  void onLongPress() async {
+    await showMoreOptions();
+  }
 
+  Future showMoreOptions() async {
+    List<Widget> children = [
+      SimpleDialogOption(
+        child: Text(likeTheUser ? "取消喜欢" : "喜欢这个人"),
+        onPressed: () {
+          Navigator.of(context).pop(Option.updateLikeUser);
+        },
+      ),
+      SimpleDialogOption(
+        child: Text('不喜欢, 不想再看到'),
+        onPressed: () {
+          Navigator.of(context).pop(Option.dislikeUser);
+        },
+      ),
+      SimpleDialogOption(
+        child: Text('举报当前用户违规'),
+        onPressed: () {
+          Navigator.of(context).pop(Option.reportUser);
+        },
+      ),
+    ];
+
+    final option = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(title: Text('更多选择'), children: children);
+        });
+
+    switch (option) {
+      case Option.updateLikeUser:
+        updateLikeUser(!likeTheUser);
+        break;
+      case Option.dislikeUser:
+        ResultData resultData = await AppApi.getInstance()
+            .dislikeUser(context, false, theUserId: user.userId);
+        // 成功发送到服务器
+        if (resultData.isSuccess()) {
+          Fluttertoast.showToast(msg: "你以后不会再看到它了~");
+        }
+        break;
+      case Option.reportUser:
+        // 在新的界面填写举报信息
+
+        break;
+      default:
+    }
   }
 
   void initTags() {
@@ -205,7 +264,11 @@ class PageViewItemState extends BaseState<PageViewItem> {
                     child: Container(
                       height: 40,
                       alignment: Alignment.centerLeft,
-                      child: Text("user.\nuserDesc??" "", textAlign: TextAlign.left, overflow: TextOverflow.ellipsis,),
+                      child: Text(
+                        "user.\nuserDesc??" "",
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       //child: Text(user.userDesc??""),
                     )),
                 Align(
@@ -220,7 +283,9 @@ class PageViewItemState extends BaseState<PageViewItem> {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       verticalDirection: VerticalDirection.down,
                       clipBehavior: Clip.hardEdge,
-                      children: <Widget>[for (String item in tags) TagItem(item)],
+                      children: <Widget>[
+                        for (String item in tags) TagItem(item)
+                      ],
                     ),
                   ),
                 ),
@@ -310,3 +375,5 @@ class TagItem extends StatelessWidget {
     );
   }
 }
+
+enum Option { updateLikeUser, dislikeUser, reportUser }
