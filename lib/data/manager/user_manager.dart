@@ -29,10 +29,11 @@ class AccountManager {
   }
 
  void refreshFromNet(BuildContext context) async{
-    User user = await AppApi.getInstance().getUserMine(context);
-    if (user != null) {
+    ResultData resultData = await AppApi.getInstance().getUserMine(context);
+    if (resultData.isSuccess()) {
+      User user = User.fromJson(resultData.data);
       cacheUser(user);
-    } else {
+    } else if (resultData.code == 500500 || resultData.result) { /// token失效, 或者服务端的其他网络正常返回结果
      logOut(notifyServer: false);
      AppController.navigateTo(context, AppRoutes.ROUTE_USER_SIGN);
     }
