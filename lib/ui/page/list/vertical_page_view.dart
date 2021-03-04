@@ -119,7 +119,7 @@ class PageViewItemState extends BaseState<PageViewItem> {
   void updateLikeUser(bool likeUser) async {
     ResultData resultData = await AppApi.getInstance().updateLikeUser(
         context, false,
-        likeUser: likeTheUser, theUserId: user.userId);
+        likeUser: likeUser, theUserId: user.userId);
     // 成功发送到服务器
     if (resultData.isSuccess()) {
       setState(() {

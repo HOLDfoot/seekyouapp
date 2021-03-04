@@ -39,15 +39,10 @@ class AppApi extends AppNetService {
     return _instance;
   }
 
-  Future<User> getUserMine(BuildContext context) async {
+  Future<ResultData> getUserMine(BuildContext context) async {
     ResultData resultData = await get(_GET_USER_MINE);
-    User user;
-    if (resultData.isFail()) {
-      Fluttertoast.showToast(msg: resultData.msg);
-    } else {
-      user = User.fromJson(resultData.data);
-    }
-    return user;
+    resultData.toast();
+    return resultData;
   }
 
   Future<ResultData> getWeather(BuildContext context, bool showProgress) async {
@@ -137,6 +132,7 @@ class AppApi extends AppNetService {
   Future<ResultData> updateLikeUser(BuildContext context, bool showProgress, {bool likeUser, String theUserId}) async {
     Map<String, dynamic> param = {
       "likeUser": likeUser,
+      "theUserId": theUserId
     };
     ResultData resultData = await post(_UPDATE_LIKE_USER,
         params: param, context: context, showLoad: showProgress);
