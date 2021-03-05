@@ -10,6 +10,7 @@ import 'package:seekyouapp/app/routers/routers.dart';
 import 'package:seekyouapp/data/manager/user.dart';
 import 'package:seekyouapp/data/manager/user_manager.dart';
 import 'package:seekyouapp/net/api/app_api.dart';
+import 'package:seekyouapp/net/model/user_preference_model.dart';
 import 'package:seekyouapp/platform/wrapper/system_service.dart';
 import 'package:seekyouapp/ui/base/base_state_widget.dart';
 import 'package:seekyouapp/ui/constant/product_constant.dart';
@@ -100,18 +101,27 @@ class PageViewItemState extends BaseState<PageViewItem> {
   void initState() {
     super.initState();
     initTags();
-    requestUserDetail();
+    requestUserPreference();
   }
 
   /// 请求用户详细信息
-  void requestUserDetail() async {
+  void requestUserPreference() async {
     // 当前用户是否喜欢它
     // 明确的个人信息
+    ResultData resultData = await AppApi.getInstance().getUserPreference(context, theUserId: user.userId);
+
+    if (resultData.isSuccess()) {
+      UserPreferenceModel userPreferenceModel = UserPreferenceModel.fromJson(resultData.data);
+      setState(() {
+          user.userIntent = userPreferenceModel.userIntent;
+          user.likeTheUser = userPreferenceModel.likeTheUser;
+      });
+    }
   }
 
   /// 双击事件, 通知服务器, 喜欢当前的用户, 并且让like图标显示
   void onDoubleTap() async {
-    if (!likeTheUser) {
+    if (!user.likeTheUser) {
       updateLikeUser(true);
     }
   }
@@ -123,7 +133,7 @@ class PageViewItemState extends BaseState<PageViewItem> {
     // 成功发送到服务器
     if (resultData.isSuccess()) {
       setState(() {
-        likeTheUser = likeUser;
+        user.likeTheUser = likeUser;
       });
     }
   }
@@ -136,7 +146,7 @@ class PageViewItemState extends BaseState<PageViewItem> {
   Future showMoreOptions() async {
     List<Widget> children = [
       SimpleDialogOption(
-        child: Center(child: Text(likeTheUser ? "取消喜欢" : "喜欢这个人")),
+        child: Center(child: Text(user.likeTheUser ? "取消喜欢" : "喜欢这个人")),
         onPressed: () {
           Navigator.of(context).pop(Option.updateLikeUser);
         },
@@ -157,10 +167,13 @@ class PageViewItemState extends BaseState<PageViewItem> {
             "maxLength": 100,
           };
           Navigator.of(context).pop(Option.reportUser);
-          await AppController.withParam(context, AppRoutes.ROUTE_LONG_TEXT, params: param).then((value) async {
+          await AppController.withParam(context, AppRoutes.ROUTE_LONG_TEXT,
+                  params: param)
+              .then((value) async {
             if (value != null) {
               ResultData resultData = await AppApi.getInstance().reportUser(
-                  context, true, theUserId: user.userId, reportText: value);
+                  context, true,
+                  theUserId: user.userId, reportText: value);
               if (resultData.isSuccess()) {
                 Fluttertoast.showToast(msg: "举报成功");
               }
@@ -173,12 +186,13 @@ class PageViewItemState extends BaseState<PageViewItem> {
     final option = await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return SimpleDialog(title: Center(child: Text('更多选择')), children: children);
+          return SimpleDialog(
+              title: Center(child: Text('更多选择')), children: children);
         });
 
     switch (option) {
       case Option.updateLikeUser:
-        updateLikeUser(!likeTheUser);
+        updateLikeUser(!user.likeTheUser);
         break;
       case Option.hateUser:
         ResultData resultData = await AppApi.getInstance()
@@ -247,18 +261,7 @@ class PageViewItemState extends BaseState<PageViewItem> {
     );
   }
 
-  bool likeTheUser = false;
-  List<String> tags = [
-    "男",
-    "郑州",
-    "28",
-    "本科",
-    "爱好看电视",
-    "爱好看电视",
-    "爱好看电视",
-    "爱好看电视",
-    "爱好看电视"
-  ];
+  List<String> tags = [];
 
   Widget getPageViewItemWidget(BuildContext context, int index) {
     if (index == 0) {
@@ -284,7 +287,7 @@ class PageViewItemState extends BaseState<PageViewItem> {
                       height: 40,
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "user.\nuserDesc??" "",
+                        user.userDesc ?? "",
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -311,7 +314,7 @@ class PageViewItemState extends BaseState<PageViewItem> {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Offstage(
-                    offstage: !likeTheUser,
+                    offstage: !user.likeTheUser,
                     child: Container(
                       margin: EdgeInsets.only(bottom: 230),
                       child: Image.asset(
@@ -346,25 +349,20 @@ class PageViewItemState extends BaseState<PageViewItem> {
                 width: double.infinity,
                 height: double.infinity,
                 padding: EdgeInsets.all(adapt(15)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      child: Text("你: "),
-                    ),
-                    Container(
-                      child: Text(
-                          " 会员名：xxx性别：x年龄：xx岁（xx-xx-xx） 身高：xxx厘米 体重：xx公斤 学历：xx 职业：xx 收入：xxxx/元/月 征婚状态：征婚进行中 婚史：xx 所在地区：xx 征婚会员详细资料 民族：xx 血型：xx 星座：xx 属相：xx 外貌：xx 体型：xx 性格：xx 信仰：xx 单位：xx 结婚形式：xx住房：xx 是否有车：xx 职业类型：xx心目中的你： 年龄：x岁 - xx岁 身高：xxx厘米 - xxx厘米 学历：xx 收入：xxxx/元/月 婚史：xx 征婚范围：xx 最佳职业：xx电话：*** QQ：*** 手机：*** email：*** 邮局寄信地址： *** 邮政编码：*** 邮寄地址：*** 收信人 ：***。"),
-                    ),
-                    Container(
-                      child: Text("我: "),
-                    ),
-                    Container(
-                      child: Text(
-                          " 会员名：xxx性别：x年龄：xx岁（xx-xx-xx） 身高：xxx厘米 体重：xx公斤 学历：xx 职业：xx 收入：xxxx/元/月 征婚状态：征婚进行中 婚史：xx 所在地区：xx 征婚会员详细资料 民族：xx 血型：xx 星座：xx 属相：xx 外貌：xx 体型：xx 性格：xx 信仰：xx 单位：xx 结婚形式：xx住房：xx 是否有车：xx 职业类型：xx心目中的你： 年龄：x岁 - xx岁 身高：xxx厘米 - xxx厘米 学历：xx 收入：xxxx/元/月 婚史：xx 征婚范围：xx 最佳职业：xx电话：*** QQ：*** 手机：*** email：*** 邮局寄信地址： *** 邮政编码：*** 邮寄地址：*** 收信人 ：***。"),
-                    ),
-                  ],
-                ),
+                child: user.userIntent == null
+                    ? Center(
+                        child: Text("当前用户还没有填写个人意向"),
+                      )
+                    : SingleChildScrollView(
+                        child: Text(
+                          user.userIntent ?? "",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
+                          //overflow: TextOverflow.clip,
+                        ),
+                      ),
               ),
             ],
           ));

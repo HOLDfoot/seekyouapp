@@ -23,10 +23,11 @@ class AppApi extends AppNetService {
   static const String _UPDATE_USER = "/update_user";
   static const String _GET_USER_ALL = "/get_user_all";
   static const String _UPDATE_MINE_INTENT = "/update_user_intent";
-  static const String _GET_MINE_INTENT = "/get_user_intent";
+  static const String _GET_USER_INTENT = "/get_user_intent";
   static const String _UPDATE_LIKE_USER = "/update_like_user";
   static const String _UPDATE_HATE_USER = "/update_hate_user";
-  static const String _report_USER = "/report_user";
+  static const String _REPORT_USER = "/report_user";
+  static const String _GET_USER_PREFERENCE = "/get_user_preference";
 
   AppApi._();
 
@@ -123,8 +124,11 @@ class AppApi extends AppNetService {
     return resultData;
   }
 
-  Future<ResultData> getMineIntent(BuildContext context, bool showProgress) async {
-    ResultData resultData = await get(_GET_MINE_INTENT, context: context, showLoad: showProgress);
+  Future<ResultData> getUserIntent(BuildContext context, bool showProgress, {String theUserId}) async {
+    Map<String, dynamic> param = {
+      "theUserId": theUserId
+    };
+    ResultData resultData = await get(_GET_USER_INTENT, context: context, showLoad: showProgress, params: param);
     resultData.toast();
     return resultData;
   }
@@ -156,8 +160,17 @@ class AppApi extends AppNetService {
       "theUserId": theUserId,
       "reportText": reportText
     };
-    ResultData resultData = await post(_report_USER,
+    ResultData resultData = await post(_REPORT_USER,
         params: param, context: context, showLoad: showProgress);
+    resultData.toast();
+    return resultData;
+  }
+
+  Future<ResultData> getUserPreference(BuildContext context, {String theUserId}) async {
+    Map<String, dynamic> param = {
+      "theUserId": theUserId,
+    };
+    ResultData resultData = await get(_GET_USER_PREFERENCE, params: param);
     resultData.toast();
     return resultData;
   }

@@ -1,4 +1,8 @@
 class User {
+    /// 从页面请求中缓存的用户信息
+    bool likeTheUser = false;
+    String userIntent;
+
     int userAge;
     String userDesc;
     String userEmail;

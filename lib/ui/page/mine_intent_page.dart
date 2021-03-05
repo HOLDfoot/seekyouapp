@@ -46,7 +46,7 @@ class MineIntentPageState extends BaseState<MineIntentPage> {
 
   /// 从服务器请求当前用户的userIntent信息
   void getMineUserIntent() async {
-    ResultData resultData = await AppApi.getInstance().getMineIntent(context, true);
+    ResultData resultData = await AppApi.getInstance().getUserIntent(context, true);
     if (resultData.isSuccess()) {
       setState(() {
         _mineIntentController.text = resultData.data["userIntent"];
