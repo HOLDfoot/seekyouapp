@@ -197,7 +197,7 @@ class AppApi extends AppNetService {
       "pageNum": pageNum,
       "pageIndex": pageSize,
     };
-    ResultData resultData = await get(_GET_USER_LIKE, params: param);
+    ResultData resultData = await get(_GET_USER_LIKE_ME, params: param);
     List<User> userList;
     if (!resultData.isFail()) {
       userList = UserListData.fromJson(resultData.data).modelList;

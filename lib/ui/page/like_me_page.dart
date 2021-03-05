@@ -14,15 +14,15 @@ import 'package:seekyouapp/net/api/app_api.dart';
 import 'package:seekyouapp/ui/common/error_page.dart';
 import 'package:seekyouapp/ui/constant/dev_constant.dart';
 
-/// 首页
-class HomePage extends StatefulWidget {
+/// 喜欢我的列表
+class LikeMePage extends StatefulWidget {
   @override
-  HomePageState createState() {
-    return HomePageState();
+  LikeMePageState createState() {
+    return LikeMePageState();
   }
 }
 
-class HomePageState extends State<HomePage> {
+class LikeMePageState extends State<LikeMePage> {
   List<User> userList;
 
   @override
@@ -34,9 +34,10 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
+        // Here we take the value from the MyLikeMePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text("寻觅"),
+        title: Text("喜欢我的人"),
+        centerTitle: true,
       ),
       body: EasyRefresh(
         emptyWidget: getEmptyWidget(),
@@ -56,22 +57,11 @@ class HomePageState extends State<HomePage> {
           mainAxisSpacing: 0,
           children: List.generate(
             getChildCount(),
-            (index) {
+                (index) {
               return getChildWidget(index);
             },
           ),
         ),
-        /*
-          child: ListView.builder(
-            padding: EdgeInsets.only(top: adapt(4)),
-            shrinkWrap: true,
-            itemCount: getChildCount(),
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return getChildWidget(index);
-            },
-          )
-*/
       ),
     );
   }
@@ -87,16 +77,7 @@ class HomePageState extends State<HomePage> {
 
   /// 网络失败则返回null, 成功则有数据
   Future<List<User>> getData() async {
-    /*User item = User(userName: "小明", userPhoto: DevConstant.CONST_PIC, userAge: 21, userDesc: "I am waiting");
-    List<User> userInfoList = [];
-    for (int i = 0; i < pageSize; i++) {
-      userInfoList.add(item);
-    }
-    print(DateTime.now());
-    await Future.delayed(Duration(seconds: 3));
-    print(DateTime.now());*/
-
-    return await AppApi.getInstance().getUserAll(context, pageNum);
+    return await AppApi.getInstance().getUserLikeMe(context, pageNum);
   }
 
   /// 刷新页面
@@ -198,9 +179,9 @@ class HomePageState extends State<HomePage> {
   }
 
   void goPageView(int index) {
-     String userJson = json.encode(userList);
-     String urlEncode = Uri.encodeComponent(userJson);
-     AppController.navigateTo(context, AppRoutes.ROUTE_USER_VERTICAL + "?index=$index&userJson=$urlEncode");
+    String userJson = json.encode(userList);
+    String urlEncode = Uri.encodeComponent(userJson);
+    AppController.navigateTo(context, AppRoutes.ROUTE_USER_VERTICAL + "?index=$index&userJson=$urlEncode");
   }
 }
 

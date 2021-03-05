@@ -183,7 +183,9 @@ class _MinePageState extends State<MinePage> {
                 getLineWidget(title: "设置", icon: Icons.settings, callback: () {
                   AppController.navigateTo(context, AppRoutes.ROUTE_SETTING);
                 }),
-                getLineWidget(title: "喜欢我的人", icon: Icons.person_add),
+                getLineWidget(title: "喜欢我的人", icon: Icons.person_add, callback: () {
+                  AppController.navigateTo(context, AppRoutes.ROUTE_USER_LIKE_ME);
+                }),
                 getLineWidget(title: "喜欢的文章", icon: Icons.art_track),
                 getLineWidget(title: "我和我的意向", icon: Icons.edit_outlined, callback: () {
                   AppController.navigateTo(context, AppRoutes.ROUTE_MINE_INTENT);

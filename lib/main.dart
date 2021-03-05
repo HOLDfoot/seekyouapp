@@ -8,10 +8,10 @@ import 'package:seekyouapp/app/routers/routers.dart';
 import 'package:seekyouapp/data/manager/InitManager.dart';
 import 'package:seekyouapp/data/manager/user_manager.dart';
 import 'package:seekyouapp/platform/wrapper/service_locator.dart';
-import 'package:seekyouapp/ui/page/home_page.dart';
-import 'package:seekyouapp/ui/page/interest_page.dart';
+import 'package:seekyouapp/ui/page/home_tab_page.dart';
+import 'package:seekyouapp/ui/page/interest_tab_page.dart';
 import 'package:seekyouapp/ui/page/login_page.dart';
-import 'package:seekyouapp/ui/page/mine_page.dart';
+import 'package:seekyouapp/ui/page/mine_tab_page.dart';
 
 import 'app/provider/Counter.dart';
 import 'data/manager/user.dart';

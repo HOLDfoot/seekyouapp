@@ -2,6 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:seekyouapp/app/routers/router_handler.dart';
 import 'package:seekyouapp/main.dart';
+import 'package:seekyouapp/ui/page/like_me_page.dart';
 import 'package:seekyouapp/ui/page/list/vertical_page_view.dart';
 import 'package:seekyouapp/ui/page/login_page.dart';
 import 'package:seekyouapp/ui/page/mine_intent_page.dart';
@@ -46,6 +47,7 @@ class AppRoutes {
 
   /// 用户界面
   static const String ROUTE_USER_VERTICAL = "/user/vertical";
+  static const String ROUTE_USER_LIKE_ME = "/user/likeMe";
 
   /// 填写长文本的通用界面
   static const String ROUTE_LONG_TEXT = "/common/longText";
@@ -64,6 +66,7 @@ class AppRoutes {
     router.define(ROUTE_SETTING, handler: createHandler(new SettingPage()));
     router.define(ROUTE_SETTING_MINE, handler: createHandler(new EditMinePage()));
     router.define(ROUTE_MINE_INTENT, handler: createHandler(new MineIntentPage()));
+    router.define(ROUTE_USER_LIKE_ME, handler: createHandler(new LikeMePage()));
 
 
     router.define(ROUTE_SETTING_MINE_DESC, handler: createParamHandler((_) {
