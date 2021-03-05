@@ -1,12 +1,20 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/ball_pulse_header.dart';
 import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
+import 'package:seekyouapp/app/routers/navigate.dart';
+import 'package:seekyouapp/app/routers/routers.dart';
+import 'package:seekyouapp/data/manager/InitManager.dart';
+import 'package:seekyouapp/data/manager/user.dart';
+import 'package:seekyouapp/net/api/app_api.dart';
+import 'package:seekyouapp/ui/common/error_page.dart';
 import 'package:seekyouapp/ui/constant/dev_constant.dart';
 
-/// 会员购买记录
+/// 关注列表
 class InterestPage extends StatefulWidget {
   @override
   InterestPageState createState() {
@@ -15,80 +23,67 @@ class InterestPage extends StatefulWidget {
 }
 
 class InterestPageState extends State<InterestPage> {
-  List<UserInfo> orderList;
+  List<User> userList;
 
+  @override
+  void initState() {
+    super.initState();
+    InitManager.getInstance().initContext(context);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
+        // Here we take the value from the MyInterestPage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text("我的喜欢"),
+        title: Text("寻觅"),
       ),
       body: EasyRefresh(
-          emptyWidget: getEmptyWidget(),
-          firstRefresh: true,
-          header: BallPulseHeader(
-            enableHapticFeedback: false,
-          ),
-          footer: BallPulseFooter(
-            enableHapticFeedback: false,
-          ),
-          onRefresh: onRefresh,
-          onLoad: noMore ? null : onLoad,
-          child: ListView.builder(
-            padding: EdgeInsets.only(top: adapt(4)),
-            shrinkWrap: true,
-            itemCount: getChildCount(),
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
+        emptyWidget: getEmptyWidget(),
+        firstRefresh: true,
+        header: BallPulseHeader(
+          enableHapticFeedback: false,
+        ),
+        footer: BallPulseFooter(
+          enableHapticFeedback: false,
+        ),
+        onRefresh: onRefresh,
+        onLoad: noMore ? null : onLoad,
+        child: GridView.count(
+          crossAxisCount: 4,
+          childAspectRatio: 0.618,
+          crossAxisSpacing: 0,
+          mainAxisSpacing: 0,
+          children: List.generate(
+            getChildCount(),
+                (index) {
               return getChildWidget(index);
             },
-          )
-/*
-          child: ListView.builder(
-            padding: EdgeInsets.only(top: adapt(4)),
-            shrinkWrap: true,
-            itemCount: getChildCount(),
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return getChildWidget(index);
-            },
-          )
-*/
+          ),
+        ),
       ),
     );
   }
 
-  /// 后端默认10
-  int pageSize = 10;
+  /// 后端默认20
+  int pageSize = 20;
 
   /// getData负责+1
-  int page = 0;
+  int pageNum = 1; // 从1开始
 
   /// 默认没有更多, 只有当刷新成功了才有更多
   bool noMore = true;
 
   /// 网络失败则返回null, 成功则有数据
-  Future<List<UserInfo>> getData() async {
-    UserInfo item = UserInfo(name: "小明", photo: DevConstant.CONST_PIC_BOY);
-    List<UserInfo> userInfoList = [];
-    for (int i = 0; i < pageSize; i++) {
-      userInfoList.add(item);
-    }
-    print(DateTime.now());
-    await Future.delayed(Duration(seconds: 3));
-    print(DateTime.now());
-    return userInfoList;
+  Future<List<User>> getData() async {
+    return await AppApi.getInstance().getUserLike(context, pageNum);
   }
 
   /// 刷新页面
   /// 处理了: 网络异常, 第一页的分页, 还有更多的情况, 第一次加载展示加载的UI
   Future<void> onRefresh() async {
-    print("onRefresh 1");
-    // 恢复初始值
-    page = 1;
-    List<UserInfo> orderData = await getData();
+    pageNum = 1;
+    List<User> orderData = await getData();
     // 只要网络请求回来, 就已经完成了第一次加载
     if (showedLoading) {
       showedLoading = false;
@@ -97,7 +92,7 @@ class InterestPageState extends State<InterestPage> {
       setState(() {
         // 如果不是网络异常, 则不为空, 更新列表, 如果是网络异常则为空, 不更新
         if (orderData != null) {
-          orderList = orderData;
+          userList = orderData;
           noMore = false;
         }
       });
@@ -107,22 +102,20 @@ class InterestPageState extends State<InterestPage> {
   /// 加载更多
   /// 处理了: 没有更多的情况, 网络失败的情况, 分页的情况
   Future<void> onLoad() async {
-    print("onLoad 1");
-
-    page++;
-    List<UserInfo> orderData = await getData();
+    pageNum++;
+    List<User> orderData = await getData();
     if (mounted) {
       setState(() {
         if (orderData == null) {
           /// 网络失败
-          page--;
+          pageNum--;
         } else if (orderData.length == 0) {
           noMore = true;
-          orderList.addAll(orderData);
-          page--;
+          userList.addAll(orderData);
+          pageNum--;
         } else {
           noMore = false;
-          orderList.addAll(orderData);
+          userList.addAll(orderData);
         }
       });
     }
@@ -142,7 +135,7 @@ class InterestPageState extends State<InterestPage> {
       return SearchResultEmptyWidget(
         title: "正在努力加载中",
       );
-    } else if (orderList == null) {
+    } else if (userList == null) {
       // 不是第一次加载情况下仍然为空, 则肯定是网络错误
       return SearchResultEmptyWidget(
         title: "网络错误",
@@ -156,41 +149,39 @@ class InterestPageState extends State<InterestPage> {
 
   /// 获取子item的数值
   int getChildCount() {
-    int count = (orderList ?? List()).length;
+    int count = (userList ?? List()).length;
     return count;
   }
 
   /// 获取item Widget
   Widget getChildWidget(int index) {
-    return Card(
-      color: Colors.green,
-      margin: EdgeInsets.all(10),
-      child: Text(orderList[index].name + " $index"),
+    print("${userList[index].userPhoto}");
+    return GestureDetector(
+      onTap: () {
+        goPageView(index);
+      },
+      child: Card(
+        child: CachedNetworkImage(
+          imageUrl: userList[index].userPhoto,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => Center(
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(),
+            ),
+          ),
+          errorWidget: (context, url, error) => Image.asset(DevConstant.CONST_PIC),
+        ),
+      ),
     );
   }
 
-  double adapt(int dp) {
-    return dp * 1.0;
+  void goPageView(int index) {
+    String userJson = json.encode(userList);
+    String urlEncode = Uri.encodeComponent(userJson);
+    AppController.navigateTo(context, AppRoutes.ROUTE_USER_VERTICAL + "?index=$index&userJson=$urlEncode");
   }
 }
 
-class UserInfo {
-  String name;
-  String email;
-  String photo;
-  String introduce;
 
-  UserInfo({this.name, this.email, this.photo, this.introduce});
-
-}
-
-class SearchResultEmptyWidget extends StatelessWidget {
-  final String title;
-
-  SearchResultEmptyWidget({Key key, this.title = "没有数据"}) :super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(this.title);
-  }
-}

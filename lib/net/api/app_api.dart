@@ -28,6 +28,8 @@ class AppApi extends AppNetService {
   static const String _UPDATE_HATE_USER = "/update_hate_user";
   static const String _REPORT_USER = "/report_user";
   static const String _GET_USER_PREFERENCE = "/get_user_preference";
+  static const String _GET_USER_LIKE = "/get_user_like";
+  static const String _GET_USER_LIKE_ME = "/get_user_like_me";
 
   AppApi._();
 
@@ -173,5 +175,33 @@ class AppApi extends AppNetService {
     ResultData resultData = await get(_GET_USER_PREFERENCE, params: param);
     resultData.toast();
     return resultData;
+  }
+
+  /// 获取喜欢的用户列表
+  Future<List<User>> getUserLike(BuildContext context, int pageNum, {int pageSize = 20}) async {
+    Map<String, dynamic> param = {
+      "pageNum": pageNum,
+      "pageIndex": pageSize,
+    };
+    ResultData resultData = await get(_GET_USER_LIKE, params: param);
+    List<User> userList;
+    if (!resultData.isFail()) {
+      userList = UserListData.fromJson(resultData.data).modelList;
+    }
+    return userList;
+  }
+
+  /// 获取喜欢我的用户列表
+  Future<List<User>> getUserLikeMe(BuildContext context, int pageNum, {int pageSize = 20}) async {
+    Map<String, dynamic> param = {
+      "pageNum": pageNum,
+      "pageIndex": pageSize,
+    };
+    ResultData resultData = await get(_GET_USER_LIKE, params: param);
+    List<User> userList;
+    if (!resultData.isFail()) {
+      userList = UserListData.fromJson(resultData.data).modelList;
+    }
+    return userList;
   }
 }

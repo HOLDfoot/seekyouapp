@@ -14,7 +14,7 @@ import 'package:seekyouapp/net/api/app_api.dart';
 import 'package:seekyouapp/ui/common/error_page.dart';
 import 'package:seekyouapp/ui/constant/dev_constant.dart';
 
-/// 会员购买记录
+/// 首页
 class HomePage extends StatefulWidget {
   @override
   HomePageState createState() {
