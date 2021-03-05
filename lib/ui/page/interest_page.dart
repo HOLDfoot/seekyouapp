@@ -36,7 +36,8 @@ class InterestPageState extends State<InterestPage> {
       appBar: AppBar(
         // Here we take the value from the MyInterestPage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text("寻觅"),
+        title: Text("遇见"),
+        centerTitle: true,
       ),
       body: EasyRefresh(
         emptyWidget: getEmptyWidget(),
