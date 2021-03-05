@@ -345,24 +345,26 @@ class PageViewItemState extends BaseState<PageViewItem> {
                 height: double.infinity,
                 color: Colors.white,
               ),
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                padding: EdgeInsets.all(adapt(15)),
-                child: user.userIntent == null
-                    ? Center(
-                        child: Text("当前用户还没有填写个人意向"),
-                      )
-                    : SingleChildScrollView(
-                        child: Text(
-                          user.userIntent ?? "",
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black),
-                          //overflow: TextOverflow.clip,
+              SafeArea(
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  padding: EdgeInsets.all(adapt(15)),
+                  child: user.userIntent == null
+                      ? Center(
+                          child: Text("当前用户还没有填写个人意向"),
+                        )
+                      : SingleChildScrollView(
+                          child: Text(
+                            user.userIntent ?? "",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black),
+                            //overflow: TextOverflow.clip,
+                          ),
                         ),
-                      ),
+                ),
               ),
             ],
           ));
