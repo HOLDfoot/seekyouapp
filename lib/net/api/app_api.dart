@@ -26,7 +26,7 @@ class AppApi extends AppNetService {
   static const String _GET_USER_INTENT = "/get_user_intent";
   static const String _UPDATE_LIKE_USER = "/update_like_user";
   static const String _UPDATE_HATE_USER = "/update_hate_user";
-  static const String _REPORT_USER = "/report_user";
+  static const String _ADD_REPORT = "/add_report";
   static const String _GET_USER_PREFERENCE = "/get_user_preference";
   static const String _GET_USER_LIKE = "/get_user_like";
   static const String _GET_USER_LIKE_ME = "/get_user_like_me";
@@ -159,10 +159,10 @@ class AppApi extends AppNetService {
   /// 举报该用户
   Future<ResultData> reportUser(BuildContext context, bool showProgress, {String theUserId, String reportText}) async {
     Map<String, dynamic> param = {
-      "theUserId": theUserId,
-      "reportText": reportText
+      "reportUserId": theUserId,
+      "reportExplain": reportText
     };
-    ResultData resultData = await post(_REPORT_USER,
+    ResultData resultData = await post(_ADD_REPORT,
         params: param, context: context, showLoad: showProgress);
     resultData.toast();
     return resultData;
