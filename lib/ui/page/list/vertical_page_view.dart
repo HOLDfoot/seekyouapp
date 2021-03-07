@@ -273,31 +273,25 @@ class PageViewItemState extends BaseState<PageViewItem> {
           width: double.infinity,
           height: double.infinity,
           color: Colors.white.withAlpha(2),
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              //color: Colors.black26,
-              padding: EdgeInsets.all(10),
-              width: double.infinity,
-              height: 300,
-              child: Stack(children: [
-                Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        user.userDesc ?? "",
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      //child: Text(user.userDesc??""),
-                    )),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 40),
-                    child: Wrap(
+          child: Stack(children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                color: Colors.white.withOpacity(0.6),
+                width: double.infinity,
+                padding: EdgeInsets.all(10),
+                //alignment: Alignment.topCenter,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  verticalDirection: VerticalDirection.up,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      user.userDesc ?? "",
+                      textAlign: TextAlign.left,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Wrap(
                       direction: Axis.horizontal,
                       spacing: 5,
                       runSpacing: 5,
@@ -309,29 +303,29 @@ class PageViewItemState extends BaseState<PageViewItem> {
                         for (String item in tags) TagItem(item)
                       ],
                     ),
-                  ),
+                  ],
                 ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Offstage(
-                    offstage: !user.likeTheUser,
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 230),
-                      child: Image.asset(
-                        'assets/images/icon_favourite_checked.png',
-                        width: adapt(50),
-                        height: adapt(50),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                ),
-              ]),
+              ),
             ),
-          ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Offstage(
+                offstage: !user.likeTheUser,
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 240, right: 10),
+                  child: Image.asset(
+                    'assets/images/icon_favourite_checked.png',
+                    width: adapt(50),
+                    height: adapt(50),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+          ])
         ),
       );
-    } else if (index == 1) {
+    } else if (index == 2) {
       return Container(); // 一个空界面
     } else {
       // 当前用户的征婚交友声明, 文字可以无限滚动
