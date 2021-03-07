@@ -128,7 +128,7 @@ class PageViewItemState extends BaseState<PageViewItem> {
 
   void updateLikeUser(bool likeUser) async {
     ResultData resultData = await AppApi.getInstance().updateLikeUser(
-        context, false,
+        context, true,
         likeUser: likeUser, theUserId: user.userId);
     // 成功发送到服务器
     if (resultData.isSuccess()) {
@@ -212,7 +212,7 @@ class PageViewItemState extends BaseState<PageViewItem> {
 
   void initTags() {
     tags = [];
-    if (TextUtil.isEmpty(user.userGender)) {
+    if (!TextUtil.isEmpty(user.userGender)) {
       tags.add(user.userGender == "m" ? "男" : "女");
     }
     if (user.userAge != 0) {
@@ -311,13 +311,18 @@ class PageViewItemState extends BaseState<PageViewItem> {
               alignment: Alignment.bottomRight,
               child: Offstage(
                 offstage: !user.likeTheUser,
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 240, right: 10),
-                  child: Image.asset(
-                    'assets/images/icon_favourite_checked.png',
-                    width: adapt(50),
-                    height: adapt(50),
-                    fit: BoxFit.contain,
+                child: GestureDetector(
+                  onTap: () {
+                    updateLikeUser(false);
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 240, right: 10),
+                    child: Image.asset(
+                      'assets/images/icon_favourite_checked.png',
+                      width: adapt(50),
+                      height: adapt(50),
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ),

@@ -104,7 +104,6 @@ class MineIntentPageState extends BaseState<MineIntentPage> {
               ),
             ),
             onWillPop: () {
-              _complete();
               return Future.value(true);
             }));
   }
