@@ -4,6 +4,8 @@ export 'package:seekyouapp/net/service/net_service.dart';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
+import 'package:seekyouapp/app/routers/navigate.dart';
+import 'package:seekyouapp/app/routers/routers.dart';
 import 'package:seekyouapp/data/manager/user_manager.dart';
 import 'package:seekyouapp/net/service/net_service.dart';
 import 'package:seekyouapp/net/widget/dialog_param.dart';
@@ -28,9 +30,9 @@ class AppNetService extends NetService {
     showParam.pop();
 
     /// 当apiToken 过期或者错误时的提示码
-    if ("0" == resultData.code && context != null) {
+    if (500500 == resultData.code && context != null) {
       // 退出登录并跳转到登录界面
-      //App.navigateTo(context, QuRoutes.ROUTE_MINE_LOGIN, clearStack: true);
+      AppController.navigateTo(context, AppRoutes.ROUTE_USER_SIGN);
     }
 
     return resultData;
@@ -39,8 +41,8 @@ class AppNetService extends NetService {
   @override
   getBasicUrl() {
     //return "http://api.k780.com:88";
-    return "http://www.rememberall.link:8081";
-    //return "http://192.168.0.100:8081";
+    //return "http://www.rememberall.link:8081";
+    return "http://192.168.0.100:8081";
   }
 
   @override
