@@ -108,13 +108,15 @@ class PageViewItemState extends BaseState<PageViewItem> {
   void requestUserPreference() async {
     // 当前用户是否喜欢它
     // 明确的个人信息
-    ResultData resultData = await AppApi.getInstance().getUserPreference(context, theUserId: user.userId);
+    ResultData resultData = await AppApi.getInstance()
+        .getUserPreference(context, theUserId: user.userId);
 
     if (resultData.isSuccess()) {
-      UserPreferenceModel userPreferenceModel = UserPreferenceModel.fromJson(resultData.data);
+      UserPreferenceModel userPreferenceModel =
+          UserPreferenceModel.fromJson(resultData.data);
       setState(() {
-          user.userIntent = userPreferenceModel.userIntent;
-          user.likeTheUser = userPreferenceModel.likeTheUser;
+        user.userIntent = userPreferenceModel.userIntent;
+        user.likeTheUser = userPreferenceModel.likeTheUser;
       });
     }
   }
@@ -264,71 +266,102 @@ class PageViewItemState extends BaseState<PageViewItem> {
   List<String> tags = [];
 
   Widget getPageViewItemWidget(BuildContext context, int index) {
+    String userContact = "";
+    if (user.userWx != null) {
+      userContact = "微信: ${user.userWx}";
+    }
+    if (user.userQq != null) {
+      if (userContact != "") {
+        userContact = userContact + ", ";
+      }
+      userContact = userContact + "QQ: ${user.userQq}";
+    }
+
     if (index == 0) {
       // 用户的个人信息和❤️按钮
       return GestureDetector(
         onDoubleTap: onDoubleTap,
         onLongPress: onLongPress,
         child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.white.withAlpha(2),
-          child: Stack(children: [
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                color: Colors.white.withOpacity(0.6),
-                width: double.infinity,
-                padding: EdgeInsets.all(10),
-                //alignment: Alignment.topCenter,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  verticalDirection: VerticalDirection.up,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      user.userDesc ?? "",
-                      textAlign: TextAlign.left,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Wrap(
-                      direction: Axis.horizontal,
-                      spacing: 5,
-                      runSpacing: 5,
-                      runAlignment: WrapAlignment.center,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      verticalDirection: VerticalDirection.down,
-                      clipBehavior: Clip.hardEdge,
-                      children: <Widget>[
-                        for (String item in tags) TagItem(item)
-                      ],
-                    ),
-                  ],
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.white.withAlpha(2),
+            child: Stack(children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  color: Colors.white.withOpacity(0.6),
+                  width: double.infinity,
+                  padding: EdgeInsets.all(10),
+                  //alignment: Alignment.topCenter,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    verticalDirection: VerticalDirection.up,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user.userDesc ?? "",
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Wrap(
+                        direction: Axis.horizontal,
+                        spacing: 5,
+                        runSpacing: 5,
+                        runAlignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        verticalDirection: VerticalDirection.down,
+                        clipBehavior: Clip.hardEdge,
+                        children: <Widget>[
+                          for (String item in tags) TagItem(item)
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            //width: 150,
+                            child: Text(
+                              user.userName != null
+                                  ? "名字: ${user.userName}   "
+                                  : "",
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Container(
+                            child: Text(
+                              userContact,
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Offstage(
-                offstage: !user.likeTheUser,
-                child: GestureDetector(
-                  onTap: () {
-                    updateLikeUser(false);
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 240, right: 10),
-                    child: Image.asset(
-                      'assets/images/icon_favourite_checked.png',
-                      width: adapt(50),
-                      height: adapt(50),
-                      fit: BoxFit.contain,
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Offstage(
+                  offstage: !user.likeTheUser,
+                  child: GestureDetector(
+                    onTap: () {
+                      updateLikeUser(false);
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 240, right: 10),
+                      child: Image.asset(
+                        'assets/images/icon_favourite_checked.png',
+                        width: adapt(50),
+                        height: adapt(50),
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ])
-        ),
+            ])),
       );
     } else if (index == 2) {
       return Container(); // 一个空界面
